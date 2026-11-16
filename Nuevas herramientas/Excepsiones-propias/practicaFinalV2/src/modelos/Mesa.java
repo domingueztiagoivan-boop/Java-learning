@@ -33,8 +33,17 @@ public class Mesa {
 	}
 
 
-	public boolean equals(Mesa mesa) {
-		return (this.numero == mesa.getNumero());
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!(obj instanceof Mesa)) return false;
+		Mesa other = (Mesa) obj;
+		return this.sector == other.getSector() && this.numero == other.getNumero();
+	}
+
+	@Override
+	public int hashCode(){
+		return Integer.hashCode(sector) + Integer.hashCode(numero);
 	}
 	
 	@Override

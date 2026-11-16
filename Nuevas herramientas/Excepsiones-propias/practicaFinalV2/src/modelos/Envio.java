@@ -71,8 +71,17 @@ public class Envio {
 		return "Envio [id=" + id + ", fecha=" + fecha + ", mesa=" + mesa + ", repartidor=" + repartidor + ", cantPedidosAsignados=" + cantPedidosAsignados + ", kmRecorridos=" + kmRecorridos + "]";
 	}
 	
-	public boolean equals(Envio envio) {
-		return (this.id == envio.getId());
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!(obj instanceof Envio)) return false;
+		Envio other = (Envio) obj;
+		return this.id == other.getId(); 
 	}
 	
+
+	@Override
+	public int hashCode() {
+		return Integer.hashCode(id);
+	}
 }

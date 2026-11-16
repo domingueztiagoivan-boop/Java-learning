@@ -39,11 +39,18 @@ public abstract class Repartidor{
 		this.capacidadPedidosMax = capacidadPedidosMax;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!(obj instanceof Repartidor)) return false;
+		Repartidor other = (Repartidor) obj;
+		return this.patenteIdentificador.equals(other.getPatenteIdentificador());
+		}
 	
-	public boolean equals(Repartidor repartidor) {
-		return (repartidor.getPatenteIdentificador().equals((this.patenteIdentificador)));
-	}
-	
+	@Override
+	public int hashCode() {
+		return patenteIdentificador.hashCode();
+		}
 
 	
 	@Override
