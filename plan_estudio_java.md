@@ -542,16 +542,16 @@ JPA. Esa mentalidad ya la tenés.
 Marcá con [x] a medida que avanzás.
 
 FASE 0
-- [ ] JDK 25 instalado y `java --version` funciona
-- [ ] Git instalado y proyectos subidos a GitHub con .gitignore
+- [x] JDK 25 instalado y `java --version` funciona
+- [x] Git instalado y proyectos subidos a GitHub con .gitignore
 
 FASE 1
-- [ ] equals(Object) + hashCode en mis clases
-- [ ] enums en lugar de clases tipo "Genero"
-- [ ] excepciones propias
-- [ ] getters que no exponen listas internas
+- [x] equals(Object) + hashCode en mis clases (practicaFinalV2; EpicentroGourmet en el refactor final)
+- [x] enums en lugar de clases tipo "Genero" (INCAANivel2)
+- [x] excepciones propias (1.3 cerrado; retoque pendiente: constructor con message en ExceptionRepartidor)
+- [x] getters que no exponen listas internas (1.4 cerrado 15/11/2026)
 - [ ] Map en lugar de búsquedas con while
-- [ ] BigDecimal para dinero
+- [x] BigDecimal para dinero (1.5 cerrado 16/11/2026)
 - [ ] bug de Vector corregido
 
 FASE 2
@@ -573,3 +573,82 @@ FASE 3
 Y SIGUE: Spring Boot.
 
 ---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+
+## 10. REGISTRO DE SESIONES
+
+Se actualiza al final de cada sesion de estudio.
+
+### Sesion del 15/11/2026: Bloque 1.4 (Encapsulamiento de colecciones)
+ESTADO: 1.4 CERRADO.
+
+Lo que se hizo:
+- Se comprobo con un `clear()` que un getter que devuelve la lista interna
+  permite borrarla desde afuera.
+- Getters de lista corregidos con `List.copyOf(...)`; ahora `clear()` lanza
+  `UnsupportedOperationException`.
+- Se descubrio el limite: la copia es SUPERFICIAL. `get(0).setNumero(999)`
+  modifico la Mesa real del sistema (la lista es nueva, los objetos no).
+- Se eliminaron los setters de datos que no deben cambiar (id, fecha, mesa,
+  repartidor, kmRecorridos, numero, patenteIdentificador) y se agrego `final`.
+- Validaciones agregadas: capacidad del repartidor > 0 y cantidad de pedidos
+  del envio > 0 (el constructor de Envio valida via el setter).
+- Decisiones de dominio: el id no se reutiliza ni cambia; un envio sin
+  pedidos no es valido; el km de un envio ya realizado no se modifica.
+
+Conceptos aprendidos:
+- copyOf vs unmodifiableList vs new ArrayList (copia, inmutabilidad, vista).
+- Copia superficial vs profunda; por que conviene atacar la causa
+  (inmutabilidad) antes que copiar objetos.
+- Una regla que cruza entidades pertenece a quien las conoce (Sistema), no
+  a una sola entidad.
+
+Pendientes anotados (no bloquean el avance):
+1. Excepciones: pasar a un constructor que reciba `message`. Hoy
+   ExceptionRepartidor(int, int) da mensajes falsos (ej. cantidad negativa
+   dice "supera la capacidad").
+2. `Envio.setKmRecorridos` volvio a ser publico: sacarlo y validar km > 0 en
+   el constructor (con `final`).
+3. Validacion cruzada: no bajar la capacidad de un Repartidor por debajo de
+   los pedidos ya asignados; se resuelve en Sistema, no en Repartidor.
+4. Evitar llamar a un setter sobreescribible desde el constructor (hacerlo
+   `final` o usar un metodo privado de validacion).
+5. Quitar `super()` explicito innecesario.
+6. Revisar los otros proyectos por `getLstX` sin copia.
+
+Proxima sesion: empezar Map en lugar de while (traerX).
+Habito nuevo: documentar en un .md del repo que se hizo y por que.
+
+### Proyecto final (EpicentroGourmet): cambios acumulados
+Se completa al cierre de cada sesion. Detalle completo en estado_estudio.md.
+- [aprendido] 1.1: equals(Object) + hashCode con @Override en todas las
+  clases.
+- [aprendido] 1.2: enum en lugar de clases/valores fijos.
+- [aprendido] 1.3: excepciones propias (con message), requireNonNull.
+- [aprendido] 1.4: getLstX con List.copyOf, sin setLstX, sin setters de
+  datos que no cambian, atributos private final, validacion unica.
+- [aprendido] 1.5: BigDecimal con String, operar y guardar
+  el resultado, compareTo (nunca equals), divide con escala y
+  RoundingMode, redondear una vez al final, sin BigDecimal como clave,
+  constantes con nombre.
+- [por aprender] Map en vez de while, Streams/Optional,
+  interfaces y patrones, Repositorio<T>, capas, JUnit, Maven, record.
+
+### Sesion del 16/11/2026: Bloque 1.5 (BigDecimal)
+ESTADO: 1.5 CERRADO (setScale aplicado al final del dia).
+- Experimentos en Test2: error binario de double, BigDecimal con String,
+  divide con escala y HALF_UP, equals vs compareTo, HashSet, setScale.
+- Aplicado en practicaFinalV2: precios, km y costos con BigDecimal;
+  comparaciones con compareTo en Sistema.
+- Cierre: setScale(2, HALF_UP) en costoTotalEnvio de Moto y CIclista.
+- Retoques opcionales: repasar por que los km son BigDecimal (multiplican
+  con dinero), probar bordes del <=, retoques de Envio. Detalle completo en estado_estudio.md.
+- Habito: ya empezo el Cambios.MD del repo.
+
+### Sesiones anteriores (resumen)
+- 13/11/2026: plan armado; 1.1 (equals/hashCode) y 1.2 (enums) completos.
+- 14/11/2026: 1.3 (excepciones propias checked/unchecked, requireNonNull).
+
+REGLA: al cerrar cada sesion se actualizan este plan y estado_estudio.md, y
+se remarca que va a tener el proyecto final (cambios acumulados).

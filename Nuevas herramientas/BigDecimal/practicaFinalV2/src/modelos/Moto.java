@@ -1,6 +1,7 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Moto extends Repartidor {
 	private BigDecimal costoFijoSeguro;
@@ -35,7 +36,7 @@ public class Moto extends Repartidor {
 	public BigDecimal costoTotalEnvio(BigDecimal kmRecorridos) {
 		BigDecimal suma = kmRecorridos.multiply(this.precioPorKm);
 		BigDecimal total = this.costoFijoSeguro.add(suma);
-		return (total);
+		return (total.setScale(2, RoundingMode.HALF_UP));
 	}
 
 }

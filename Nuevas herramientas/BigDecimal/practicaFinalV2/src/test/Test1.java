@@ -121,6 +121,12 @@ public class Test1 {
 		///Y si modificamos un objeto de la lista copia, estamos modificando el mismo objeto que esta en la lista original.
 		///Para evitar esto, deberiamos hacer un deep copy, es decir, devolver una copia de la lista y de los objetos que contiene. (mas adelante)
 		
+		try {
+		sistema.agregarEnvio(LocalDate.of(2026, 10, 25), sistema.traerMesa(4, 10), sistema.traerRepartidor("MOT222"), 9, new BigDecimal("25"));
+		} catch (ExceptionRepartidor e){
+			System.out.println(e.getMessage());
+		}
+		System.out.println("\nResultado de prueba Cloude: " + sistema.traerRepartidor("MOT222").costoTotalEnvio(new BigDecimal("25")));
 	}
 
 }

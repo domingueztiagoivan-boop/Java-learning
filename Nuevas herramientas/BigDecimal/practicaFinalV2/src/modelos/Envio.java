@@ -68,7 +68,7 @@ public class Envio {
 	}
 
 	
-	public BigDecimal validarKmRecorridos(BigDecimal kmRecorridos)throws ExceptionRepartidor{
+	private static BigDecimal validarKmRecorridos(BigDecimal kmRecorridos)throws ExceptionRepartidor{
 		if (kmRecorridos.compareTo(BigDecimal.ZERO) <= 0) throw new ExceptionRepartidor("ERROR. Km deben ser mayor a 0.");
 		return kmRecorridos;
 	}
