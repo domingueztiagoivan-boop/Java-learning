@@ -550,7 +550,7 @@ FASE 1
 - [x] enums en lugar de clases tipo "Genero" (INCAANivel2)
 - [x] excepciones propias (1.3 cerrado; retoque pendiente: constructor con message en ExceptionRepartidor)
 - [x] getters que no exponen listas internas (1.4 cerrado 15/11/2026)
-- [ ] Map en lugar de búsquedas con while
+- [x] Map en lugar de búsquedas con while (1.6 cerrado 17/11/2026; retoques menores pendientes en estado_estudio.md)
 - [x] BigDecimal para dinero (1.5 cerrado 16/11/2026)
 - [ ] bug de Vector corregido
 
@@ -632,7 +632,11 @@ Se completa al cierre de cada sesion. Detalle completo en estado_estudio.md.
   el resultado, compareTo (nunca equals), divide con escala y
   RoundingMode, redondear una vez al final, sin BigDecimal como clave,
   constantes con nombre.
-- [por aprender] Map en vez de while, Streams/Optional,
+- [aprendido] 1.6: Map en vez de listas con while (clave natural,
+  traerX con excepción propia, duplicados con containsKey, ids con
+  contador, Map.copyOf en getters, reportes sobre values()).
+- [por aprender] Orden definido en reportes (LinkedHashMap/TreeMap/
+  Comparator), Streams/Optional,
   interfaces y patrones, Repositorio<T>, capas, JUnit, Maven, record.
 
 ### Sesion del 16/11/2026: Bloque 1.5 (BigDecimal)
@@ -645,6 +649,24 @@ ESTADO: 1.5 CERRADO (setScale aplicado al final del dia).
 - Retoques opcionales: repasar por que los km son BigDecimal (multiplican
   con dinero), probar bordes del <=, retoques de Envio. Detalle completo en estado_estudio.md.
 - Habito: ya empezo el Cambios.MD del repo.
+
+### Sesion del 17/11/2026: Bloque 1.6 (Map en lugar de while)
+ESTADO: 1.6 CERRADO (retoques menores pendientes).
+- Experimentos en Test3: put sobre una clave existente reemplaza y el size no
+  cambia; get de una clave inexistente da null; get(99).length() lanza
+  NullPointerException; containsKey y values().
+- Aplicado en practicaFinalV2 (Sistema): tres Map (repartidores por patente,
+  mesas por "sector-numero", envios por id); traerX lanza
+  ExceptionSinRegistrar (checked); duplicados con containsKey; ids con
+  contadores lastIdX; getters con Map.copyOf; reportes sobre values().
+- Aprendido: en traerX no existir es error, en agregarX es lo normal; un
+  HashMap no tiene orden ni "ultimo elemento"; un int nunca es null.
+- Pendientes: frase de justificacion de la clave, revisar
+  ExceptionSinRegistrar, sacar throws sobrante en agregarX, codigo muerto en
+  traerEnviosPorRepartidor, private en Sistema, requireNonNull en
+  agregarEnvio, Cambios.MD con imprecisiones. Detalle en estado_estudio.md.
+- Proxima sesion: retoques de 1.6 y bug de Vector.traerElMenor; despues Fase
+  2 (Interfaces).
 
 ### Sesiones anteriores (resumen)
 - 13/11/2026: plan armado; 1.1 (equals/hashCode) y 1.2 (enums) completos.
