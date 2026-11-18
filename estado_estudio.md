@@ -414,15 +414,7 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
    de clases de EpicentroGourmet y las ordena según la lista acumulada
    (1.1 a 1.6). Se trabaja un tema por vez, un commit por tema, y se
    verifica que el comportamiento no cambie.
-2. Antes de cerrar la Fase 1: bug de Vector.traerElMenor (cantidad < 0
-   debería ser == 0 y lanzar excepción en vez de imprimir). Ejercicio sin
-   solución: primero que lo reproduzca (vector vacío) y prediga el
-   resultado.
-3. Retomar al pasar por EpicentroGourmet los opcionales de 1.5 que no se
-   hicieron (km como BigDecimal, bordes del <=, etc.).
-4. Corregir las imprecisiones del Cambios.MD (ver 1.6) y subir a Git las
-   versiones actualizadas de estado_estudio.md y plan_estudio_java.md.
-5. Al cerrar epicentro-fase1: Fase 2 / Bloque 2 (Interfaces, ej.
+2. Al cerrar epicentro-fase1: Fase 2 / Bloque 2 (Interfaces, ej.
    CalculadorCosto en Repartidor) en practicaFinalV2 y, al terminar la
    fase, epicentro-fase2 como copia de epicentro-fase1.
 
