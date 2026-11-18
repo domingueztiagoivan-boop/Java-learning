@@ -6,15 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class Sistema {
-	Map<String, Repartidor> repartidoresMap;
-	Map<String, Mesa> mesasMap;
-	Map<Integer, Envio> enviosMap;
-	int lastIdMesa;
-	int lastIdRepartidores;
-	int lastIdEnvios;
+	private final Map<String, Repartidor> repartidoresMap;
+	private final Map<String, Mesa> mesasMap;
+	private final Map<Integer, Envio> enviosMap;
+	private int lastIdMesa;
+	private int lastIdRepartidores;
+	private int lastIdEnvios;
 	
 	
 	public Sistema() {
@@ -45,13 +46,13 @@ public class Sistema {
 	public Mesa traerMesa(int sector, int numero) throws ExceptionSinRegistrar{
 		String clave = sector + "-" + numero;
 		if (!(mesasMap.containsKey(clave))) throw new ExceptionSinRegistrar("ERROR. La mesa no se encuentra registrada.");
-		int i = 0;
+		
 		Mesa resultado = mesasMap.get(clave);
 		return resultado;
 	}
 	
 	
-	public boolean agregarMesa(int sector, int numero) throws ExceptionYaRegistrado, ExceptionSinRegistrar  {
+	public boolean agregarMesa(int sector, int numero) throws ExceptionYaRegistrado {
 		String clave = sector + "-" + numero;
 		if (mesasMap.containsKey(clave)) throw new ExceptionYaRegistrado("ERROR. Mesa ya registrada.");
 	
@@ -73,7 +74,7 @@ public class Sistema {
 	}
 	
 
-	public boolean agregarRepartidorMoto(String patenteIdentificador, int capacidadPedidosMax, BigDecimal costoFijoSeguro, BigDecimal precioPorKm) throws ExceptionYaRegistrado, ExceptionRepartidorMenorCero, ExceptionSinRegistrar {
+	public boolean agregarRepartidorMoto(String patenteIdentificador, int capacidadPedidosMax, BigDecimal costoFijoSeguro, BigDecimal precioPorKm) throws ExceptionYaRegistrado, ExceptionRepartidorMenorCero {
 		if (repartidoresMap.containsKey(patenteIdentificador)) throw new ExceptionYaRegistrado("ERROR. El repartidor con patente " + patenteIdentificador + " ya esta registrado.");
 		
 		int proxId = lastIdRepartidores + 1;
@@ -83,7 +84,7 @@ public class Sistema {
 		return true;
 	}
 	
-	public boolean agregarRepartidorCiclista(String patenteIdentificador, int capacidadPedidosMax, boolean esElectrico, BigDecimal precioBaseEnvio) throws ExceptionYaRegistrado, ExceptionRepartidorMenorCero,ExceptionSinRegistrar{
+	public boolean agregarRepartidorCiclista(String patenteIdentificador, int capacidadPedidosMax, boolean esElectrico, BigDecimal precioBaseEnvio) throws ExceptionYaRegistrado, ExceptionRepartidorMenorCero{
 		if (repartidoresMap.containsKey(patenteIdentificador)) throw new ExceptionYaRegistrado("ERROR. El repartidor con patente " + patenteIdentificador + " ya esta registrado.");
 		
 		int proxId = lastIdRepartidores + 1;
@@ -97,7 +98,10 @@ public class Sistema {
 		if(!(repartidoresMap.containsKey(repartidor.getPatenteIdentificador()))) throw new ExceptionSinRegistrar ("ERROR. EL repartidor no esta registrado.");
 		String clave = mesa.getSector() + "-" + mesa.getNumero();
 		if (!(mesasMap.containsKey(clave)))throw new ExceptionSinRegistrar("ERROR. La mesa no se encunetra registrada.");
-		
+
+		Objects.requireNonNull(mesa, "La mesa no puede ser null");
+		Objects.requireNonNull(repartidor, "El repartidor no puede ser null");		
+
 		int proxId = lastIdEnvios + 1;
 		lastIdEnvios++;
 		
@@ -120,9 +124,9 @@ public class Sistema {
 	}
 	
 
-	public List<Envio> traerEnviosPorRepartidor(String patenteIdentificador)throws NullPointerException, ExceptionSinRegistrar{
+	public List<Envio> traerEnviosPorRepartidor(String patenteIdentificador)throws ExceptionSinRegistrar{
 		
-		if (traerRepartidor(patenteIdentificador) == null) throw new NullPointerException();
+		
 		
 		List<Envio> resultado = new ArrayList<Envio>();
 		
@@ -152,5 +156,27 @@ public class Sistema {
 			}
 		}
 		return resultado;
+	}
+
+
+	public boolean cambiarRepartidorCapacidadPedidosMax(String patenteIdentificador, int capacidadPedidosMax)throws ExceptionSinRegistrar, ExceptionRepartidorMenorCero, ExceptionRepartidor{
+		
+		Repartidor r = traerRepartidor(patenteIdentificador);
+
+		List<Envio> lstEnviosRepartidor = traerEnviosPorRepartidor(patenteIdentificador);
+		int pedidoMayorCantidad = 0;
+
+		for (Envio e: lstEnviosRepartidor){
+			if (e.getCantPedidosAsignados() > pedidoMayorCantidad){
+				pedidoMayorCantidad = e.getCantPedidosAsignados();
+			}
+		}
+
+		if (capacidadPedidosMax < pedidoMayorCantidad) throw new ExceptionRepartidor("ERROR. La capacidad Nueva es menor al envio con mas cantidad de pedidos asignados. [" + pedidoMayorCantidad + "]");
+		
+
+		r.setCapacidadPedidosMax(capacidadPedidosMax);
+		return true;
+		
 	}
 }

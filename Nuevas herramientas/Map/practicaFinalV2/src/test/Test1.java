@@ -22,9 +22,7 @@ public class Test1 {
 		} catch (ExceptionYaRegistrado e) {
 			System.out.println(e.getMessage());
 		}
-		 catch (ExceptionSinRegistrar e) {
-			System.out.println(e.getMessage());
-		 }
+	
 		
 		
 		try {
@@ -39,9 +37,7 @@ public class Test1 {
 		catch (ExceptionRepartidorMenorCero e) {
 			System.out.println(e.getMessage());
 		}
-		catch (ExceptionSinRegistrar e) {
-			System.out.println(e.getMessage());
-		}
+
 		
 		
 
@@ -61,12 +57,16 @@ public class Test1 {
 			System.out.println("Exception capturada: " + e.getMessage());
 		}
 		
+	
 		List<Envio> enviosPorFecha = sistema.traerEnviosPorFechaYCosto(LocalDate.of(2026, 05, 02), LocalDate.of(2026, 05, 15), new BigDecimal("6000"));
+		
+		
 		
 		System.out.println("\n4) Envios por fechas y costo ---");
 		for (Envio e: enviosPorFecha) {
 			System.out.println(e.toString());
 		}
+		
 		
 		List<Repartidor> listaEficientes = sistema.traerRepartidoresEficientes();
 		
@@ -84,9 +84,7 @@ public class Test1 {
 		catch (ExceptionRepartidorMenorCero e) {
 			System.out.println("Exception capturada: " + e.getMessage());
 		}
-		catch (ExceptionSinRegistrar e) {
-			System.out.println("Exception capturada: " + e.getMessage());
-		}
+
 		
 		System.out.println("\n7) Exception 2 ---");
 		try {
@@ -104,10 +102,7 @@ public class Test1 {
 		} catch (ExceptionYaRegistrado e) {
 			System.out.println("Exception capturada: " + e.getMessage());
 		}
-		catch (ExceptionSinRegistrar e) {
-			System.out.println("Exception capturada: " + e.getMessage());
-		}
-		
+
 		System.out.println("\n9) Exception 4 ---");
 		try {
 			sistema.agregarEnvio(LocalDate.of(2026, 05, 27), sistema.traerMesa(9, 19), sistema.traerRepartidor("MOT111"), 9, new BigDecimal("95"));
@@ -121,6 +116,22 @@ public class Test1 {
 			System.out.println("Exception capturada: " + e.getMessage());
 		}
 		
+		System.out.println("\n10) Exception 5 ---");
+		try {
+			sistema.cambiarRepartidorCapacidadPedidosMax("MOT222", 2);
+		} catch (ExceptionRepartidor e) {
+			System.out.println(e.getMessage());
+		}
+		catch (ExceptionRepartidorMenorCero e) {
+			System.out.println(e.getMessage());
+		}
+		catch (ExceptionSinRegistrar e) {
+			System.out.println(e.getMessage());
+		}
+
+
+
+		System.out.println("\n11) Exception 6 ---");
 		try {
 		sistema.agregarEnvio(LocalDate.of(2026, 10, 25), sistema.traerMesa(4, 10), sistema.traerRepartidor("MOT222"), 9, new BigDecimal("25"));
 		} catch (ExceptionRepartidor e){
@@ -129,11 +140,7 @@ public class Test1 {
 		catch (ExceptionSinRegistrar e) {
 			System.out.println("Exception capturada: " + e.getMessage());
 		}
-		try{
-			System.out.println("\nResultado de prueba Cloude: " + sistema.traerRepartidor("MOT222").costoTotalEnvio(new BigDecimal("25")));
-		} catch (ExceptionSinRegistrar e) {
-			System.out.println("Exception capturada: " + e.getMessage());
-		}
+
 	}
 	/// MAPS NO ORIDENA LA LISTAS.
 }

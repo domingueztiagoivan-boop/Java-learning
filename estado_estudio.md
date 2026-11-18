@@ -1,6 +1,6 @@
 # ESTADO DE ESTUDIO JAVA (pegar al inicio de cada sesión nueva)
 
-Última actualización: 16/11/2026, fin de sesión 4 (1.5 cerrado al final del día)
+Última actualización: 17/11/2026, fin de sesión 5 (1.6 Map cerrado en practicaFinalV2)
 
 ## Cómo se usa
 - Abrí una conversación nueva cada día y pegá este archivo completo.
@@ -39,8 +39,9 @@
 ## Posición actual
 - Fase 0: CERRADA. Git en uso (repo con .gitignore y README, rama main).
   JDK del alumno: OpenJDK 25 (LTS vigente).
-- Fase 1: temas 1.1, 1.2, 1.3, 1.4 y 1.5 CERRADOS. Siguiente: Map en
-  lugar de búsquedas con while (traerX).
+- Fase 1: temas 1.1 a 1.6 CERRADOS (1.6 = Map en lugar de while). Siguiente:
+  retoques pendientes de Sistema y bug de Vector.traerElMenor; después
+  Fase 2 (Interfaces).
 
 ## Checklist Fase 1
 - [x] 1.1 equals(Object) + hashCode en practicaFinalV2
@@ -125,7 +126,48 @@
         Sistema y revisar getLstX de INCAANivel2. Ya resuelto: el
         constructor de ExceptionRepartidor ahora recibe message y
         setKmRecorridos ya no existe.
-- [ ] Map en lugar de búsquedas con while (traerX)
+- [x] 1.6 Map en lugar de búsquedas con while (practicaFinalV2, cerrado
+      17/11/2026)
+      Hecho: Test3 con experimentos (put sobre la misma clave reemplaza y
+      el size no cambia; get de clave inexistente devuelve null;
+      get(99).length() lanza NullPointerException; containsKey; values()).
+      Aplicado en Sistema: repartidoresMap (clave: patente String),
+      mesasMap (clave: sector + "-" + numero, String) y enviosMap (clave:
+      id Integer). traerMesa / traerRepartidor usan containsKey y get y
+      lanzan ExceptionSinRegistrar (checked, creada por él) si no existe.
+      agregarMesa / agregarRepartidorX chequean duplicados con containsKey
+      (ExceptionYaRegistrado). Ids generados con contadores lastIdMesa,
+      lastIdRepartidores, lastIdEnvios (nunca size()+1 ni get(size()-1)).
+      Getters con Map.copyOf. Reportes con for sobre values(). Salida de
+      Test1 verificada completa (reportes 4 y 5, tests 6 a 9, 3800.00).
+      Cambios.MD actualizado con una sección "Maps por Listas".
+      Retoques pendientes (ninguno bloquea):
+      * Frase de justificación de la clave: nunca la escribió completa.
+        Pedirle: "uso sector-numero porque ___" y por qué el guion (mesa 11
+        del sector 1 vs mesa 1 del sector 11 darían la misma clave sin él).
+      * ExceptionSinRegistrar: todavía no se revisó el archivo (comentario
+        del porqué de checked con //, constructor con message).
+      * agregarMesa / agregarRepartidorMoto / agregarRepartidorCiclista
+        siguen declarando throws ExceptionSinRegistrar sin lanzarla: sacarlo
+        de la firma y de los catch de Test1.
+      * traerEnviosPorRepartidor: el if (traerRepartidor(...) == null) throw
+        new NullPointerException() es código muerto (traerRepartidor ya
+        lanza ExceptionSinRegistrar); sacarlo y limpiar el throws. Ese
+        método y los otros "traer específicos" se revisan al terminar.
+      * agregarEnvio: si mesa o repartidor llegan null, explota con NPE sin
+        mensaje antes de validar; agregar Objects.requireNonNull.
+      * Atributos de Sistema sin private (regla de 1.4); pueden ser final.
+      * Typos en mensajes: "Repatidor", "encuntra", "encunetra", "EL".
+      * int i = 0 sobrante en traerMesa (ya sacó el de traerRepartidor).
+      * Cambios.MD tiene imprecisiones: Map.copyOf es un método estático
+        (Map.copyOf(mapa)), no map.copyOf(); values() devuelve una
+        Collection de valores, no una "colección con toda la info"; el
+        título "Maps por Listas" es confuso; falta anotar que get devuelve
+        null si la clave no existe (y el NPE que eso causa) y que put con
+        una clave existente reemplaza el valor. "Los maps no son
+        ordenados" vale para HashMap, no para todos los Map.
+      * Un "2" suelto apareció en la salida un par de veces (de un println
+        olvidado en alguna clase); en la última salida ya no estaba.
 - [ ] Bug de Vector.traerElMenor (cantidad < 0 debería ser == 0, y
       lanzar excepción en vez de imprimir)
 - [ ] Corregir EpicentroGourmet: se deja para el PROYECTO FINAL (no ahora).
@@ -188,9 +230,27 @@ EpicentroGourmet todavía (se toca recién en el refactor final).
     BigDecimal.ZERO en vez de new BigDecimal("0").
   - requireNonNull en parámetros BigDecimal para evitar NPE sin mensaje.
 
+1.6 Map  [aprendido]
+  - Reemplazar toda lista con búsqueda por clave (while + índice) por un
+    Map<K,V>: clave = atributo natural que no cambia (patente, id, o
+    clave compuesta armada con separador que evite colisiones).
+  - traerX con get + containsKey; si no existe, lanzar excepción propia
+    checked (ej. ExceptionSinRegistrar), no devolver null.
+  - Duplicados con containsKey antes del put (ExceptionYaRegistrado); el
+    chequeo de agregarX NO usa traerX.
+  - Ids con contador propio (lastIdX), nunca size()+1 ni get(size()-1).
+  - Getters con Map.copyOf (copia inmutable y superficial).
+  - Reportes con for sobre values(); no depender del orden del HashMap.
+  - La clave necesita equals/hashCode bien hechos (String e Integer ya
+    los tienen); nunca BigDecimal como clave.
+  - Validar null de parámetros antes de usarlos (requireNonNull).
+
 Más adelante  [por aprender]
-  - Map en lugar de traerX con while.
   - Streams y Optional en todos los reportes.
+  - Reportes con orden definido (HashMap no ordena): LinkedHashMap,
+    TreeMap o Comparator al listar.
+  - Clave compuesta de la mesa como record (ClaveMesa(sector, numero)) en
+    lugar del String "sector-numero".
   - Interfaces (ej. CalculadorCosto) y patrones (Strategy, Factory,
     Builder); inyección de dependencias por constructor.
   - Repositorio<T> genérico, estructura en capas (modelo, repositorio,
@@ -249,6 +309,25 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
   para igualdad de dinero. En un HashSet 2.0 y 2.00 entran como dos
   elementos. Un compareTo mal parentizado (cerrar el paréntesis antes del
   <= 0) y una condición invertida (>= en vez de <=) son errores típicos.
+- Map<K,V>: guarda pares clave -> valor; las claves no se repiten. put con
+  una clave existente REEMPLAZA el valor (el size no cambia) y devuelve el
+  valor anterior (o null). get de una clave inexistente devuelve null (no
+  lanza nada); pedirle un método a ese null da NullPointerException
+  (probado con get(99).length()). containsKey(k) responde true/false sin
+  lanzar. values() devuelve una Collection solo con los valores (sin
+  claves); containsValue compara contra los VALORES (un int contra objetos
+  Mesa nunca coincide y compila igual). HashMap no tiene orden ni noción
+  de "último elemento" (get(size()-1) no sirve); busca la clave con
+  hashCode y equals, igual que HashSet. Map.copyOf(m) es un método
+  estático que devuelve copia inmutable y superficial. Para identificar
+  con dos datos hace falta UNA clave: se arma un String con separador
+  (sector + "-" + numero). Un int es primitivo y nunca es null: chequear
+  "int != null" no compila; el null está en el RESULTADO de get. En
+  traerX no existir es un error (excepción); en agregarX no existir es lo
+  normal y el error es que ya exista (por eso agregarX usa containsKey y
+  no traerX). Los ids se generan con un contador aparte porque el Map no
+  tiene "último". La NullPointerException explota lejos de la causa (en
+  la línea de quien llama); una excepción propia la deja clara.
 - Lectura de errores: empezar por el primer error (línea más arriba); los
   de abajo suelen ser en cascada.
 - "Incorrect Package" en VS Code: problema de raíz del proyecto (la
@@ -262,20 +341,25 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
   en src/test necesita `package test;`. F2 renombra clases/variables.
 
 ## Siguiente paso concreto
-1. Arrancar con 3 minutos de verificación: ¿verificó el costo de MOT222
-   con 25 km ya redondeado a 2 decimales? ¿reformuló por qué los km son
-   BigDecimal? ¿corrigió el comentario del HashSet?
-2. (Opcional) bordes del <= y retoques de Envio anotados en el 1.5.
-3. Seguir con el siguiente ítem de Fase 1: Map en lugar de búsquedas con
-   while (traerX), en practicaFinalV2 (traerMesa, traerRepartidor).
-   Problema: recorrer toda la lista para buscar por clave es lento y
-   repetitivo. Ver Map<K,V>/HashMap, put/get/containsKey, qué clave usar
-   y por qué esa clave debe tener equals/hashCode bien hechos (se conecta
-   con 1.1; y con la regla de hoy: nunca BigDecimal como clave). Ejercicio
-   sin solución.
-4. Recordar el .md de documentación en el repo (el alumno ya empezó
-   Cambios.MD): qué cambié / por qué / cómo lo probé. Y subir a Git las
-   versiones actualizadas de estado_estudio.md y plan_estudio_java.md.
+1. Arrancar con 3 minutos de verificación: ¿puede escribir con sus palabras
+   la frase "uso sector-numero como clave de mesa porque ___" y explicar
+   para qué sirve el guion? ¿Puede predecir qué imprime Test1 en el test 8
+   (mesa repetida) sin correrlo? Pedir también el archivo
+   ExceptionSinRegistrar.java (nunca se revisó).
+2. Retoques pendientes de 1.6 y 1.4/1.5 (ver listas): sacar el throws
+   sobrante en agregarX, el código muerto de traerEnviosPorRepartidor,
+   private en los atributos de Sistema, requireNonNull en agregarEnvio,
+   validación cruzada de capacidad, getLstX de INCAANivel2. Elegir 2 o 3
+   por sesión, no todos juntos.
+3. Siguiente ítem de Fase 1: bug de Vector.traerElMenor (cantidad < 0
+   debería ser == 0 y lanzar excepción en vez de imprimir). Ejercicio sin
+   solución: primero que lo reproduzca (vector vacío) y prediga el
+   resultado.
+4. Después, Fase 2 / Bloque 2: Interfaces (por ejemplo CalculadorCosto en
+   Repartidor), siguiendo el plan.
+5. Recordar el Cambios.MD (corregir las imprecisiones anotadas en 1.6) y
+   subir a Git las versiones actualizadas de estado_estudio.md y
+   plan_estudio_java.md.
 
 ## Notas para Claude
 - No dar la solución directa: primero pistas. Pedir que explique con sus
@@ -300,6 +384,13 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
   escritos confunden después.
 - El alumno razona bien y a veces explica lo correcto respondiendo otra
   pregunta: verificar que contestó lo que se le preguntó.
+- En Map se trabó con la mecánica de "traer antes de agregar" y con
+  confundir null con el parámetro int. Funciona bien: dejar que corra el
+  código y lea el primer error, y cuando se frustre mostrarle que el
+  círculo es aparente. Sigue copiando plantillas sin cambiar el mapa
+  (traerRepartidor buscó en mesasMap): remarcarlo.
+- Cuando avisa que se queda sin tokens/tiempo: no contestar largo; el
+  cierre se hace al volver, pidiendo los archivos de nuevo.
 
 ## Registro de sesiones
 - S1 (13/11/2026): armado del plan; 1.1 y 1.2 completos. EpicentroGourmet
@@ -318,3 +409,11 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
   armó Cambios.MD. Nota: tendió a copiar frases mías en comentarios y a
   sacar una conclusión al revés (HashSet size 2); pedir siempre que
   reescriba con sus palabras y que prediga antes de correr.
+- S5 (17/11/2026): 1.6 Map completo. Test3 con experimentos de put/get/
+  containsKey/values, NPE con get(99).length(). En practicaFinalV2, Sistema
+  pasó a tres Map (patente, "sector-numero", id), traerX con excepción
+  ExceptionSinRegistrar, duplicados con containsKey, ids con contadores
+  lastIdX y reportes sobre values(). Resolvió solo los errores en cascada
+  (traerRepartidor buscaba en mesasMap) y dejó la salida de Test1
+  verificada. Armó la sección de Map en Cambios.MD (con imprecisiones
+  anotadas). Quedan retoques menores listados en 1.6.
