@@ -1,6 +1,6 @@
 # ESTADO DE ESTUDIO JAVA (pegar al inicio de cada sesión nueva)
 
-Última actualización: 17/11/2026, fin de sesión 5 (1.6 Map cerrado en practicaFinalV2)
+Última actualización: 18/11/2026, fin de sesión 6 (retoques de Fase 1 cerrados; sigue el refactor de EpicentroGourmet por fase)
 
 ## Cómo se usa
 - Abrí una conversación nueva cada día y pegá este archivo completo.
@@ -33,15 +33,18 @@
   (Genero, Pelicula, Incaa).
 - Proyecto usado en 1.4: practicaFinalV2 (Sistema, Mesa, Repartidor, Envio;
   prueba en test/Test1.java).
-- EpicentroGourmet es el TP más completo de OO1 y NO se toca hasta el
-  final: es el proyecto de examen (ver sección Proyecto final).
+- EpicentroGourmet es el TP más completo de OO1 y es el proyecto de examen
+  de cada fase: se refactoriza UNA VEZ AL FINAL DE CADA FASE, en una carpeta
+  propia por versión (ver sección Proyecto final, "Método por fases").
 
 ## Posición actual
 - Fase 0: CERRADA. Git en uso (repo con .gitignore y README, rama main).
   JDK del alumno: OpenJDK 25 (LTS vigente).
-- Fase 1: temas 1.1 a 1.6 CERRADOS (1.6 = Map en lugar de while). Siguiente:
-  retoques pendientes de Sistema y bug de Vector.traerElMenor; después
-  Fase 2 (Interfaces).
+- Fase 1: temas 1.1 a 1.6 CERRADOS y retoques de practicaFinalV2 CERRADOS
+  (18/11/2026). Siguiente: FASE 1 FINAL = refactor de EpicentroGourmet en
+  la carpeta epicentro-fase1 aplicando 1.1 a 1.6. Queda pendiente el bug de
+  Vector.traerElMenor (se hace antes de cerrar la Fase 1). Después Fase 2
+  (Interfaces).
 
 ## Checklist Fase 1
 - [x] 1.1 equals(Object) + hashCode en practicaFinalV2
@@ -168,22 +171,70 @@
         ordenados" vale para HashMap, no para todos los Map.
       * Un "2" suelto apareció en la salida un par de veces (de un println
         olvidado en alguna clase); en la última salida ya no estaba.
+- [x] Retoques de 1.4, 1.5 y 1.6 en practicaFinalV2 (cerrados 18/11/2026, S6)
+      Hecho y confirmado por el alumno: ExceptionSinRegistrar con comentario
+      del porqué de checked (error previsible que quien llama puede
+      resolver, no un error de programación); throws sobrante sacado de
+      agregarX y de los catch de Test1; código muerto de
+      traerEnviosPorRepartidor sacado (y su throws); atributos de Sistema
+      private final (contadores private, sin final); requireNonNull en
+      agregarEnvio (sin el if); typos de mensajes; int i sobrante;
+      validación cruzada de capacidad en Sistema
+      (cambiarRepartidorCapacidadPedidosMax: traerRepartidor una sola vez,
+      compara contra el MAYOR envío, < deja pasar el límite, lanza
+      ExceptionRepartidor con el mayor en el mensaje; Test1 con caso que
+      falla [4] y caso en el límite). getLstX de INCAANivel2: decisión del
+      alumno de no tocarlos y resolverlos en el refactor de EpicentroGourmet.
+      Nota: Claude no vio el código final de algunos retoques
+      (requireNonNull, retorno de cambiarRepartidorCapacidadPedidosMax,
+      typos, comentario final de ExceptionSinRegistrar). Quedaron cerrados
+      por palabra del alumno; si reaparece alguno al aplicarlo en
+      EpicentroGourmet, se corrige ahí.
+      Opcionales de 1.5 que NO se hicieron (se retoman al aplicarlos en
+      EpicentroGourmet): predecir a mano el costo de MOT222 con 25 km;
+      reformular por qué km son BigDecimal (se multiplican con dinero);
+      bordes del <= (traerEnviosPorFechaYCosto y el <= 100); comentarios
+      de Test2 (HashSet al revés); ceros a la izquierda en LocalDate.of.
+      Pendiente menor: Cambios.MD con las imprecisiones anotadas en 1.6.
 - [ ] Bug de Vector.traerElMenor (cantidad < 0 debería ser == 0, y
       lanzar excepción en vez de imprimir)
-- [ ] Corregir EpicentroGourmet: se deja para el PROYECTO FINAL (no ahora).
+- [ ] FASE 1 FINAL: refactor de EpicentroGourmet en epicentro-fase1,
+      aplicando 1.1 a 1.6 (ver sección Proyecto final). EN CURSO: es lo
+      siguiente a empezar.
 
 ## Proyecto final: refactor completo de EpicentroGourmet
-- Decisión del alumno (13/11/2026): aprender todo por partes en proyectos
-  chicos y, al terminar, reescribir EpicentroGourmet aplicando todas las
-  herramientas. Esto reemplaza al "proyecto integrador" de la Fase 3 del
-  plan (sigue valiendo su estructura en capas, tests y Maven).
-- Antes de empezar el refactor: crear en Git un tag o rama con la versión
-  original (ej. `epicentro-original`) para poder comparar antes y después.
+- Decisión del alumno (13/11/2026): aprender por partes en proyectos chicos
+  y aplicar todo en EpicentroGourmet. Esto reemplaza al "proyecto
+  integrador" de la Fase 3 del plan (sigue valiendo su estructura en
+  capas, tests y Maven).
+- CAMBIO (18/11/2026, decisión del alumno): en vez de refactorizar
+  EpicentroGourmet una sola vez al final de todo, se refactoriza AL
+  FINAL DE CADA FASE, con las herramientas nuevas de esa fase sumadas a
+  las anteriores.
+### Método por fases (EpicentroGourmet es el actor principal)
+- Una carpeta por versión, sin pisar las anteriores:
+  * epicentro-original: la versión de OO1, intacta (con tag o rama Git
+    `epicentro-original` para poder comparar).
+  * epicentro-fase1: copia del original + 1.1 a 1.6 (equals/hashCode, enum,
+    excepciones propias, encapsulamiento, BigDecimal, Map).
+  * epicentro-fase2: copia de epicentro-fase1 + lo nuevo de la Fase 2
+    (interfaces, Comparator, genéricos, streams, JUnit, patrones...).
+  * (y así: cada versión parte de una copia de la anterior; nunca se
+    edita una carpeta ya cerrada.)
+- Trabajo dentro de cada carpeta: un tema por vez, en el orden de la lista
+  acumulada, con un commit por tema.
+- Corrección: el alumno escribe el código y lo pega (Claude no ve el repo);
+  Claude revisa con pistas, usando la lista acumulada como checklist de
+  qué debe tener cada clase. Cada versión debe mantener el mismo
+  comportamiento que la anterior (se compara con la salida del test).
+- Cuando una versión queda cerrada se actualiza la lista "QUÉ VA A TENER
+  EL PROYECTO FINAL" marcando lo que quedó aplicado.
 ### QUÉ VA A TENER EL PROYECTO FINAL (lista acumulada)
 Cada tema cerrado agrega acá lo que hay que aplicar en EpicentroGourmet.
 Estado: [aprendido] = ya se estudió y aplicó en un proyecto chico;
-[por aprender] = todavía no se vio. Ningún ítem está aplicado en
-EpicentroGourmet todavía (se toca recién en el refactor final).
+[por aprender] = todavía no se vio. Hasta el 18/11/2026 ningún ítem está
+aplicado en EpicentroGourmet; los de 1.1 a 1.6 se aplican en
+epicentro-fase1 (siguiente paso).
 
 1.1 equals / hashCode  [aprendido]
   - Reemplazar todos los equals(X x) por equals(Object) con @Override.
@@ -328,6 +379,22 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
   no traerX). Los ids se generan con un contador aparte porque el Map no
   tiene "último". La NullPointerException explota lejos de la causa (en
   la línea de quien llama); una excepción propia la deja clara.
+- Alcance (scope): una variable declarada entre las llaves de un try existe
+  solo ahí (igual que en un if o un for); no depende de si puede lanzar
+  excepción. Para usarla afuera se declara antes del try, o se usa adentro.
+- Java no deja capturar una excepción checked en un catch si el try no
+  puede lanzarla (error de compilación): es la señal de que sobra un
+  throws. Un método que informa los errores con excepciones y nunca
+  devuelve false no necesita retornar boolean.
+- Después de un throw o un return el else sobra. Objects.requireNonNull ya
+  chequea solo (no va dentro de un if) y va al principio, antes de usar
+  el parámetro.
+- Concatenación de String: "1" + "11" y "11" + "1" dan ambos "111"; por eso
+  la clave de la mesa lleva guion ("1-11" distinto de "11-1"). Sin guion,
+  containsKey rechazaría una mesa que no está repetida.
+- Validación cruzada de capacidad: se compara contra el MAYOR envío (cada
+  envío se valida contra la capacidad por separado, no suman); con <
+  una capacidad igual al mayor pasa, que es lo correcto.
 - Lectura de errores: empezar por el primer error (línea más arriba); los
   de abajo suelen ser en cascada.
 - "Incorrect Package" en VS Code: problema de raíz del proyecto (la
@@ -341,25 +408,23 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
   en src/test necesita `package test;`. F2 renombra clases/variables.
 
 ## Siguiente paso concreto
-1. Arrancar con 3 minutos de verificación: ¿puede escribir con sus palabras
-   la frase "uso sector-numero como clave de mesa porque ___" y explicar
-   para qué sirve el guion? ¿Puede predecir qué imprime Test1 en el test 8
-   (mesa repetida) sin correrlo? Pedir también el archivo
-   ExceptionSinRegistrar.java (nunca se revisó).
-2. Retoques pendientes de 1.6 y 1.4/1.5 (ver listas): sacar el throws
-   sobrante en agregarX, el código muerto de traerEnviosPorRepartidor,
-   private en los atributos de Sistema, requireNonNull en agregarEnvio,
-   validación cruzada de capacidad, getLstX de INCAANivel2. Elegir 2 o 3
-   por sesión, no todos juntos.
-3. Siguiente ítem de Fase 1: bug de Vector.traerElMenor (cantidad < 0
+1. FASE 1 FINAL: EpicentroGourmet. Antes de tocar código el alumno crea en
+   Git el tag/rama `epicentro-original` y la carpeta `epicentro-fase1`
+   (copia del original). Claude pide la estructura de paquetes y la lista
+   de clases de EpicentroGourmet y las ordena según la lista acumulada
+   (1.1 a 1.6). Se trabaja un tema por vez, un commit por tema, y se
+   verifica que el comportamiento no cambie.
+2. Antes de cerrar la Fase 1: bug de Vector.traerElMenor (cantidad < 0
    debería ser == 0 y lanzar excepción en vez de imprimir). Ejercicio sin
    solución: primero que lo reproduzca (vector vacío) y prediga el
    resultado.
-4. Después, Fase 2 / Bloque 2: Interfaces (por ejemplo CalculadorCosto en
-   Repartidor), siguiendo el plan.
-5. Recordar el Cambios.MD (corregir las imprecisiones anotadas en 1.6) y
-   subir a Git las versiones actualizadas de estado_estudio.md y
-   plan_estudio_java.md.
+3. Retomar al pasar por EpicentroGourmet los opcionales de 1.5 que no se
+   hicieron (km como BigDecimal, bordes del <=, etc.).
+4. Corregir las imprecisiones del Cambios.MD (ver 1.6) y subir a Git las
+   versiones actualizadas de estado_estudio.md y plan_estudio_java.md.
+5. Al cerrar epicentro-fase1: Fase 2 / Bloque 2 (Interfaces, ej.
+   CalculadorCosto en Repartidor) en practicaFinalV2 y, al terminar la
+   fase, epicentro-fase2 como copia de epicentro-fase1.
 
 ## Notas para Claude
 - No dar la solución directa: primero pistas. Pedir que explique con sus
@@ -389,6 +454,13 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
   código y lea el primer error, y cuando se frustre mostrarle que el
   círculo es aparente. Sigue copiando plantillas sin cambiar el mapa
   (traerRepartidor buscó en mesasMap): remarcarlo.
+- RITMO (pedido del alumno, 18/11/2026): el alumno entiende y aplica muchas
+  correcciones sin comentarlas; contestar todo se le hace pesado. No exigir
+  una explicación por cada punto: si dice que algo ya lo corrigió, darlo
+  por bueno. Pedir explicación o predicción solo en decisiones de diseño
+  importantes o cuando la respuesta no coincide con lo que se ve. Menos
+  preguntas por turno, correcciones más cortas. Mantener la exigencia con
+  el código (le gusta), no con el interrogatorio.
 - Cuando avisa que se queda sin tokens/tiempo: no contestar largo; el
   cierre se hace al volver, pidiendo los archivos de nuevo.
 
@@ -417,3 +489,15 @@ Antes de empezar el refactor: crear el tag o rama `epicentro-original`.
   (traerRepartidor buscaba en mesasMap) y dejó la salida de Test1
   verificada. Armó la sección de Map en Cambios.MD (con imprecisiones
   anotadas). Quedan retoques menores listados en 1.6.
+- S6 (18/11/2026): cierre de los retoques de Fase 1 en practicaFinalV2.
+  Verificación de arranque: razonó bien por qué el guion en la clave de la
+  mesa ("11"+"1" = "1"+"11") y predijo el test 8. Se sacó el throws
+  sobrante en agregarX, el código muerto de traerEnviosPorRepartidor, y se
+  agregaron private final en Sistema y requireNonNull en agregarEnvio.
+  Armó cambiarRepartidorCapacidadPedidosMax (validación cruzada contra el
+  mayor envío, excepción propia, sin println). Aclaró el alcance de una
+  variable dentro de try. Explicó que ExceptionSinRegistrar es checked por
+  ser un error previsible y no de código. Decisión de método: EpicentroGourmet
+  se refactoriza al final de cada fase en carpetas separadas
+  (epicentro-original, epicentro-fase1, epicentro-fase2...). Pidió un
+  ritmo con menos interrogatorio (ver Notas para Claude).

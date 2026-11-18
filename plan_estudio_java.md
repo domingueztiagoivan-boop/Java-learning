@@ -291,6 +291,12 @@ aplicá, uno por uno, en commits separados:
 6. Dinero con `BigDecimal`.
 7. Corregir el bug de `Vector.traerElMenor`.
 Objetivo: mismo comportamiento, código más correcto.
+MÉTODO (decisión del 18/11/2026): cada tema se aprende primero en un
+proyecto chico (practicaFinalV2, INCAANivel2) y, al cerrar la fase, se
+aplica todo en EpicentroGourmet en una carpeta propia: epicentro-original
+(intacta), epicentro-fase1 (original + 1.1 a 1.6), epicentro-fase2 (copia de
+fase1 + lo nuevo de la Fase 2), y así. Nunca se edita una carpeta ya
+cerrada. Detalle y lista acumulada en estado_estudio.md.
 
 ### FASE 2: Conceptos nuevos, en este orden (6 a 10 semanas)
 Cada paso usa el anterior, no los saltees. Para cada uno: ver / leer la
@@ -548,11 +554,12 @@ FASE 0
 FASE 1
 - [x] equals(Object) + hashCode en mis clases (practicaFinalV2; EpicentroGourmet en el refactor final)
 - [x] enums en lugar de clases tipo "Genero" (INCAANivel2)
-- [x] excepciones propias (1.3 cerrado; retoque pendiente: constructor con message en ExceptionRepartidor)
+- [x] excepciones propias (1.3 cerrado; retoques cerrados 18/11/2026)
 - [x] getters que no exponen listas internas (1.4 cerrado 15/11/2026)
-- [x] Map en lugar de búsquedas con while (1.6 cerrado 17/11/2026; retoques menores pendientes en estado_estudio.md)
+- [x] Map en lugar de búsquedas con while (1.6 cerrado 17/11/2026; retoques cerrados 18/11/2026)
 - [x] BigDecimal para dinero (1.5 cerrado 16/11/2026)
 - [ ] bug de Vector corregido
+- [ ] FASE 1 FINAL: EpicentroGourmet refactorizado en epicentro-fase1 (1.1 a 1.6)
 
 FASE 2
 - [ ] 1. Interfaces
@@ -567,7 +574,7 @@ FASE 2
 - [ ] 10. Concurrencia y anotaciones (nociones)
 
 FASE 3
-- [ ] Proyecto integrador terminado, con tests y README
+- [ ] Proyecto integrador (EpicentroGourmet refactorizado por fases, epicentro-faseN) terminado, con tests y README
 - [ ] Checklist de la sección 4 completa
 
 Y SIGUE: Spring Boot.
@@ -622,6 +629,8 @@ Habito nuevo: documentar en un .md del repo que se hizo y por que.
 
 ### Proyecto final (EpicentroGourmet): cambios acumulados
 Se completa al cierre de cada sesion. Detalle completo en estado_estudio.md.
+Desde el 18/11/2026 se aplica al cierre de cada FASE, en carpetas separadas
+(epicentro-original, epicentro-fase1, epicentro-fase2...).
 - [aprendido] 1.1: equals(Object) + hashCode con @Override en todas las
   clases.
 - [aprendido] 1.2: enum en lugar de clases/valores fijos.
@@ -667,6 +676,24 @@ ESTADO: 1.6 CERRADO (retoques menores pendientes).
   agregarEnvio, Cambios.MD con imprecisiones. Detalle en estado_estudio.md.
 - Proxima sesion: retoques de 1.6 y bug de Vector.traerElMenor; despues Fase
   2 (Interfaces).
+
+### Sesion del 18/11/2026: Cierre de retoques de Fase 1
+ESTADO: retoques de 1.3 a 1.6 CERRADOS en practicaFinalV2.
+- Verificacion de arranque: clave "sector-numero" (el guion evita que
+  "1"+"11" y "11"+"1" den la misma clave); prediccion del test 8.
+- Retoques: throws sobrante fuera de agregarX y de traerEnviosPorRepartidor,
+  codigo muerto eliminado, private final en Sistema, requireNonNull en
+  agregarEnvio, comentario de ExceptionSinRegistrar (checked: error
+  previsible, no de programacion), typos.
+- Nuevo: cambiarRepartidorCapacidadPedidosMax en Sistema (validacion
+  cruzada: compara contra el MAYOR envio, excepcion propia, sin println ni
+  boolean inutil). Test1 con caso que falla y caso en el limite.
+- Aprendido: alcance de variables en try; catch de checked sin throws no
+  compila; el else sobra tras throw; requireNonNull sin if y al principio.
+- Decision de metodo: EpicentroGourmet se refactoriza al final de cada
+  fase en carpetas separadas, sin solapar versiones.
+- Pendientes: bug de Vector.traerElMenor, Cambios.MD, opcionales de 1.5.
+- Proxima sesion: FASE 1 FINAL, epicentro-fase1 (aplicar 1.1 a 1.6).
 
 ### Sesiones anteriores (resumen)
 - 13/11/2026: plan armado; 1.1 (equals/hashCode) y 1.2 (enums) completos.
