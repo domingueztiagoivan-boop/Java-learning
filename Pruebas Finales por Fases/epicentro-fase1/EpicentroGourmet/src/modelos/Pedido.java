@@ -16,7 +16,6 @@ public class Pedido {
 		
 		
 		public Pedido(int idPedido, LocalDate fechaTransaccion, Festival festival, UnidadVenta unidadVenta) {
-			super();
 			this.idPedido = idPedido;
 			this.fechaTransaccion = fechaTransaccion;
 			this.festival = festival;

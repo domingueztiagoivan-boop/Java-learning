@@ -1,5 +1,6 @@
 package modelos;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -50,7 +51,19 @@ public abstract class Personal {
 		
 
 
+		@Override
+		public boolean equals(Object obj){
+			if (this == obj) return true;
+			if (!(obj instanceof Personal)) return false;
+			Personal p = (Personal) obj;
+			return (this.dni == p.getDni());
+		}
 
+
+		@Override
+		public int hashCode(){
+			return Long.hashCode(dni);
+		}
 
 
 		@Override
@@ -59,7 +72,7 @@ public abstract class Personal {
 		}
 		
 		
-		abstract double calcularSueldo(Costo costo);
+		abstract BigDecimal calcularSueldo(Costo costo);
 
 	   
 	    public int calcularAntiguedad() {
@@ -71,7 +84,6 @@ public abstract class Personal {
 
 			int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
 
-			// Validamos si es menor de edad (por ejemplo, menor de 18)
 			if (edad < 18) throw new ExceptionFechaNacimiento("El personal debe ser mayor de 18 años (Edad actual: " + edad + ")");
 			return  fechaNacimiento;
 		}

@@ -1,184 +1,190 @@
 package modelos;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Sistema {
-	private final List<Festival> lstFestival;
-	private final List<Personal> lstPersonal;
-	private final List<Pedido> lstPedidos;
-	private final List<UnidadVenta> lstUnidadVenta;
-	private final List<Plato> lstPlatos;
+	private final Map<String, Festival> mapFestivales;
+	private final Map<Long, Personal> mapPersonal;
+	private final Map<Integer, Pedido> mapPedidos;
+	private final Map<String, UnidadVenta> mapUnidadVentas;
+	private final Map<String, Plato> mapPlatos;
+	private int lastIdFestivales;
+	private int lastIdPersonal;
+	private int lastIdPedidos;
+	private int lastIdUnidadVenta;
+	private int lastIdPlatos;
+	private int lastIdReporteVenta;
 	
 	
 	public Sistema() {
-		this.lstFestival = new ArrayList<Festival>();
-		this.lstPersonal = new ArrayList<Personal>();
-		this.lstPedidos = new ArrayList<Pedido>();
-		this.lstUnidadVenta = new ArrayList<UnidadVenta>();
-		this.lstPlatos = new ArrayList<Plato>();
+		this.mapFestivales = new HashMap<>();
+		this.mapPersonal = new HashMap<>();
+		this.mapPedidos = new HashMap<>();
+		this.mapUnidadVentas = new HashMap<>();
+		this.mapPlatos = new HashMap<>();
+		this.lastIdFestivales = 0;
+		this.lastIdPedidos = 0;
+		this.lastIdPersonal = 0;
+		this.lastIdPlatos = 0;
+		this.lastIdUnidadVenta = 0;
+		this.lastIdReporteVenta = 0;
 	}
 
 
-	public List<Festival> getLstFestival() {
-		return lstFestival;
+	public Map<String, Festival> getMapFestivales() {
+		return Map.copyOf(mapFestivales);
 	}
 	
-	public List<Personal> getLstPersonal() {
-		return lstPersonal;
+	public Map<Long, Personal> getMapPersonal() {
+		return Map.copyOf(mapPersonal);
 	}
 	
-	public List<Pedido> getLstPedidos() {
-		return lstPedidos;
+	public Map<Integer, Pedido> getMapPedidos() {
+		return Map.copyOf(mapPedidos);
 	}
 	
-	public List<UnidadVenta> getLstUnidadVenta() {
-		return lstUnidadVenta;
+	public Map<String, UnidadVenta> getMapUnidadVentas() {
+		return Map.copyOf(mapUnidadVentas);
+	}
+
+	public Map<String, Plato> getMapPlatos(){
+		return Map.copyOf(mapPlatos); 
 	}
 	
 	
 
 	/// Todos los traer ------------------------
 	
-	public Festival traerFestival(String nombreFestival) {
+	public Festival traerFestival(String nombreFestival)throws 	ExceptionSinRegistro {
+		if (!(mapFestivales.containsKey(nombreFestival))) throw new ExceptionSinRegistro("ERROR. El festival '" + nombreFestival + "' no se ecnunetra registrado.");
 		
-		Festival resultado = null;
-		int i = 0;
+		Festival resultado = mapFestivales.get(nombreFestival);
 		
-		while (i < lstFestival.size() && resultado == null) {
-			if (lstFestival.get(i).getNombreFestival().equals(nombreFestival)) {
-				resultado = lstFestival.get(i);
-			}
-			i++;
-		}
 		return resultado;
 	}
 	
-	public Personal traerPersonal(long dni) {
-	    Personal resultado = null;
-	    int i = 0;
+	public Personal traerPersonal(long dni) throws ExceptionSinRegistro{
+		if (!(mapPersonal.containsKey(dni))) throw new ExceptionSinRegistro("ERROR. El personal con DNI " + dni + " no se encuentra registrado.");
+
+	    Personal resultado = mapPersonal.get(dni);
 	    
-	    while (i < lstPersonal.size() && resultado == null) {
-	        if (lstPersonal.get(i).getDni() == dni) {
-	            resultado = lstPersonal.get(i);
-	        }
-	        i++;
-	    }
 	    return resultado;
 	}
 	
-	public UnidadVenta traerUnidadVenta(String codigo) {
-	    UnidadVenta resultado = null;
-	    int i = 0;
-	    
-	    while (i < lstUnidadVenta.size() && resultado == null) {
-	        if (lstUnidadVenta.get(i).getCodigo().equals(codigo)) {
-	            resultado = lstUnidadVenta.get(i);
-	        }
-	        i++;
-	    }
+	public UnidadVenta traerUnidadVenta(String codigo) throws ExceptionSinRegistro{
+		if (!(mapUnidadVentas.containsKey(codigo))) throw new ExceptionSinRegistro("ERROR. La unidad venta con codigo " + codigo + " no se encuentra registrada.");
+
+	    UnidadVenta resultado = mapUnidadVentas.get(codigo);
+
 	    return resultado;
 	}
 	
-	public Plato traerPlato(String nombrePlato) {
-	    Plato resultado = null;
-	    int i = 0;
+	public Plato traerPlato(String nombrePlato)throws ExceptionSinRegistro {
+		if (!(mapPlatos.containsKey(nombrePlato))) throw new ExceptionSinRegistro("ERROR. El plato " + nombrePlato + " no se encuentra registrado.");
+
+	    Plato resultado = mapPlatos.get(nombrePlato);
 	    
-	    while (i < lstPlatos.size() && resultado == null) {
-	        if (lstPlatos.get(i).getNombrePlato().equalsIgnoreCase(nombrePlato)) {
-	            resultado = lstPlatos.get(i);
-	        }
-	        i++;
-	    }
 	    return resultado;
 	}
 	
-	public Pedido traerPedido(int idPedido) {
-	    Pedido resultado = null;
-	    int i = 0;
-	    
-	    while (i < lstPedidos.size() && resultado == null) {
-	        if (lstPedidos.get(i).getIdPedido() == idPedido) {
-	            resultado = lstPedidos.get(i);
-	        }
-	        i++;
-	    }
+	public Pedido traerPedido(int idPedido)  throws ExceptionSinRegistro{
+		if (!(mapPedidos.containsKey(idPedido))) throw new ExceptionSinRegistro("ERROR. El pedido con id " + idPedido + " no se encuentra registrado.");
+
+	    Pedido resultado = mapPedidos.get(idPedido);
+	
 	    return resultado;
 	}
 	
 	/// Todos los agregar ------------------------
 	
 	
-	public boolean agregarFestival(String nombreFestival, String temporadaFestival, LocalDate fechaInicio, LocalDate fechaFin, Costo costoFestival)throws Exception{
-		if (traerFestival(nombreFestival) != null) throw new Exception("ERROR. El nombre " + nombreFestival + " Ya se encuentra registrado como festival.");
+	public boolean agregarFestival(String nombreFestival, String temporadaFestival, LocalDate fechaInicio, LocalDate fechaFin, Costo costoFestival)throws ExceptionYaRegistrado{
+		if (mapFestivales.containsKey(nombreFestival)) throw new ExceptionYaRegistrado("ERROR. El nombre " + nombreFestival + " Ya se encuentra registrado como festival.");
 		
-		int proxId = (!lstFestival.isEmpty()) ? lstFestival.get(lstFestival.size() - 1).getIdFestival() + 1 : 1;
+		int proxId = lastIdFestivales + 1;
+		lastIdFestivales++;
 		
-		return lstFestival.add(new Festival(proxId, nombreFestival, temporadaFestival, fechaInicio, fechaFin, costoFestival));
+		mapFestivales.put(nombreFestival, new Festival(proxId, nombreFestival, temporadaFestival, fechaInicio, fechaFin, costoFestival));
+		return true;
 	}
 	
-	public boolean agregarPersonalCocinero(String nombre, String apellido, int dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String especialidad, double plus) throws Exception {
-			if (traerPersonal(dni) != null) throw new Exception("ERROR. El personal con DNI " + dni + " ya se encuentra registrado.");
+	public boolean agregarPersonalCocinero(String nombre, String apellido, Long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String especialidad, double plus) throws ExceptionYaRegistrado, ExceptionFechaNacimiento {
+			if (mapPersonal.containsKey(dni)) throw new ExceptionYaRegistrado("ERROR. El personal con DNI " + dni + " ya se encuentra registrado.");
 		
-			int proxId = (!lstPersonal.isEmpty()) ? lstPersonal.get(lstPersonal.size() - 1).getIdPersonal() + 1 : 1;
+			int proxId = lastIdPersonal + 1;
+			lastIdPersonal++;
 			
-			return lstPersonal.add(new Cocinero(proxId, nombre, apellido, dni, fechaNacimiento, fechaIngreso, especialidad, plus));
+			mapPersonal.put(dni, new Cocinero(proxId, nombre, apellido, dni, fechaNacimiento, fechaIngreso, especialidad, plus));
+			return true;
 			}
 	
-	public boolean agregarPersonalCajero(String nombre, String apellido, int dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String turno) throws Exception {
-			if (traerPersonal(dni) != null) throw new Exception("ERROR. El personal con DNI " + dni + " ya se encuentra registrado.");
+	public boolean agregarPersonalCajero(String nombre, String apellido, Long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String turno) throws ExceptionYaRegistrado, ExceptionFechaNacimiento {
+			if (mapPersonal.containsKey(dni)) throw new ExceptionYaRegistrado("ERROR. El personal con DNI " + dni + " ya se encuentra registrado.");
 
-			int proxId = (!lstPersonal.isEmpty()) ? lstPersonal.get(lstPersonal.size() - 1).getIdPersonal() + 1 : 1;
+			int proxId = lastIdPersonal + 1;
+			lastIdPersonal++;
 			
-			return lstPersonal.add(new Cajero(proxId, nombre, apellido, dni, fechaNacimiento, fechaIngreso, turno));
+			mapPersonal.put(dni, new Cajero(proxId, nombre, apellido, dni, fechaNacimiento, fechaIngreso, turno));
+			return true;
+		}
+	
+	public boolean agregarUnidadFoodTruck(String nombreComercial, Personal responsable, double superficie, String codigo, String patente, boolean electricidad) throws ExceptionYaRegistrado {
+			if (mapUnidadVentas.containsKey(codigo)) throw new ExceptionYaRegistrado("ERROR. La unidad con código " + codigo + " ya se encuentra registrada.");
+			
+			int proxId = lastIdUnidadVenta + 1;
+			lastIdUnidadVenta++;
+
+			mapUnidadVentas.put(codigo, new FoodTruck(proxId, nombreComercial, responsable, superficie, codigo,patente, electricidad));
+			return true;
 			}
 	
-	public boolean agregarUnidadFoodTruck(String nombreComercial, Personal responsable, double superficie, String codigo, String patente, boolean electricidad) throws Exception {
-			if (traerUnidadVenta(codigo) != null) throw new Exception("ERROR. La unidad con código " + codigo + " ya se encuentra registrada.");
+	public boolean agregarUnidadPuestoDesarmable(String nombreComercial, Personal responsable, double superficie, String codigo, int cantidadCarpas, int tiempoMontaje) throws ExceptionYaRegistrado {
+			if (mapUnidadVentas.containsKey(codigo)) throw new ExceptionYaRegistrado("ERROR. La unidad con código " + codigo + " ya se encuentra registrada.");
+		
+			int proxId = lastIdUnidadVenta + 1;
+			lastIdUnidadVenta++;
 			
-			int proxId = (!lstUnidadVenta.isEmpty()) ? lstUnidadVenta.get(lstUnidadVenta.size() - 1).getIdUnidadVenta() + 1 : 1;
-			
-			return lstUnidadVenta.add(new FoodTruck(proxId, nombreComercial, responsable, superficie, codigo,patente, electricidad));
+			mapUnidadVentas.put(codigo, new PuestoDesarmable(proxId, nombreComercial, responsable, superficie, codigo, cantidadCarpas, tiempoMontaje));
+			return true;
 			}
 	
-	public boolean agregarUnidadPuestoDesarmable(String nombreComercial, Personal responsable, double superficie, String codigo, int cantidadCarpas, int tiempoMontaje) throws Exception {
-			if (traerUnidadVenta(codigo) != null) throw new Exception("ERROR. La unidad con código " + codigo + " ya se encuentra registrada.");
+	public boolean agregarPlato(String nombrePlato, BigDecimal precioVenta, BigDecimal costoProduccion)throws ExceptionYaRegistrado{
+		if (mapPlatos.containsKey(nombrePlato)) throw new ExceptionYaRegistrado("ERROR. El plato " + nombrePlato + " ya se encuentra regitrado.");
 		
-			int proxId = (!lstUnidadVenta.isEmpty()) ? lstUnidadVenta.get(lstUnidadVenta.size() - 1).getIdUnidadVenta() + 1 : 1;
-			
-			return lstUnidadVenta.add(new PuestoDesarmable(proxId, nombreComercial, responsable, superficie, codigo, cantidadCarpas, tiempoMontaje));
-			}
-	
-	public boolean agregarPlato(String nombrePlato, double precioVenta, double costoProduccion)throws Exception{
-		if (traerPlato(nombrePlato) != null) throw new Exception("ERROR. El plato " + nombrePlato + " ya se encuentra regitrado.");
+		int proxId = lastIdPlatos + 1;
+		lastIdPlatos++;
 		
-		int proxId = (!lstPlatos.isEmpty()) ? lstPlatos.get(lstPlatos.size() - 1).getIdPlato() + 1 : 1;
-		
-		return lstPlatos.add(new Plato(proxId, nombrePlato, precioVenta, costoProduccion));
+		mapPlatos.put(nombrePlato, new Plato(proxId, nombrePlato, precioVenta, costoProduccion));
+		return true;
 	}
 	
 	
 	/// CU #5 -------------------
 	
-	public boolean registrarPedido(LocalDate fecha, Festival festival, UnidadVenta unidadVenta) throws Exception{
+	public boolean registrarPedido(LocalDate fecha, Festival festival, UnidadVenta unidadVenta) throws ExceptionSinRegistro{
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new Exception ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		if (!(mapFestivales.containsKey(festival.getNombreFestival()))) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
-		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new Exception ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
+		if (!(mapUnidadVentas.containsKey(unidadVenta.getCodigo())))throw new ExceptionSinRegistro ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
 		
-		int proxId = !lstPedidos.isEmpty() ? lstPedidos.get(lstPedidos.size() - 1).getIdPedido() + 1: 1;
+		int proxId = lastIdPedidos + 1;
+		lastIdPedidos++;
 		
-		return lstPedidos.add(new Pedido(proxId, fecha, festival, unidadVenta));
+		mapPedidos.put(proxId, new Pedido(proxId, fecha, festival, unidadVenta));
+		return true;
 	}
 	
 	
 	
 	/// CU #6
 	
-	public List<ReporteVenta> generarReporteRecaudacion(Festival festival)throws Exception{
-		if (traerFestival(festival.getNombreFestival()) == null) throw new Exception ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+	public List<ReporteVenta> generarReporteRecaudacion(Festival festival)throws ExceptionSinRegistro{
+		if (!(mapFestivales.containsKey(festival.getNombreFestival()))) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
 		List<ReporteVenta> lstReporte = new ArrayList<ReporteVenta>();
 		
@@ -186,16 +192,20 @@ public class Sistema {
 			return lstReporte;
 		}
 		
-		for (UnidadVenta unidad: lstUnidadVenta) {
-			double recaudacionTotal = 0;
+		for (UnidadVenta unidad: mapUnidadVentas.values()) {
+			BigDecimal recaudacionTotal = BigDecimal.ZERO;
 			
 			for (Pedido pedido: festival.getLstPedidos()) {
 				if (pedido.getUnidadVenta().equals(unidad)) {
-					recaudacionTotal += pedido.calcularTotalPedido();
+					//recaudacionTotal += pedido.calcularTotalPedido();
+					recaudacionTotal = recaudacionTotal.add(pedido.calcularTotalPedido());
 				}
 			}
 			
-			ReporteVenta nuevoReporte = new ReporteVenta(unidad, recaudacionTotal);
+			int proxId = lastIdReporteVenta + 1;
+			lastIdReporteVenta++;
+
+			ReporteVenta nuevoReporte = new ReporteVenta(proxId, unidad, recaudacionTotal);
 			
 			lstReporte.add(nuevoReporte);
 		}
@@ -210,7 +220,7 @@ public class Sistema {
 		
 		List<Personal> lstPersonalFechas = new ArrayList<Personal>();
 		
-		for (Personal persona: lstPersonal) {
+		for (Personal persona: mapPersonal.values()) {
 			if ((persona.getFechaNacimiento().isAfter(inicio) || persona.getFechaNacimiento().equals(inicio))  &&  (persona.getFechaNacimiento().isBefore(fin) || persona.getFechaNacimiento().equals(fin))) {
 				lstPersonalFechas.add(persona);
 			}
@@ -222,26 +232,34 @@ public class Sistema {
 	/// CU #8
 	
 
-	public double calcularRentabilidadNetaUnidad(UnidadVenta unidadVenta, Festival festival)throws Exception {
-		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new Exception ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
+	public BigDecimal calcularRentabilidadNetaUnidad(UnidadVenta unidadVenta, Festival festival)throws ExceptionSinRegistro {
+		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new ExceptionSinRegistro ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new Exception ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
-		double totalUnidadVenta = 0;
-		double totalPersonalCoste = 0;
+		BigDecimal totalUnidadVenta = BigDecimal.ZERO;
+		BigDecimal totalPersonalCoste = BigDecimal.ZERO;
 		
-		for (Pedido pedido: lstPedidos) {
+		for (Pedido pedido: mapPedidos.values()) {
 			if (pedido.getUnidadVenta().equals(unidadVenta) && pedido.getFestival().equals(festival)) {
-				totalUnidadVenta += (pedido.calcularTotalPedido() - pedido.calcularTotalCosteProduccion());
+				//totalUnidadVenta += (pedido.calcularTotalPedido() - pedido.calcularTotalCosteProduccion());
+				//BigDecimal totalPedido = pedido.calcularTotalPedido();
+				//BigDecimal totalCosteProduccion = pedido.calcularTotalCosteProduccion();
+				//totalUnidadVenta = totalUnidadVenta.add(totalPedido.subtract(totalCosteProduccion));
+				//totalUnidadVenta = totalUnidadVenta.add(pedido.calcularTotalPedido().subtract(pedido.calcularTotalCosteProduccion()));
+				totalUnidadVenta = totalUnidadVenta.add(pedido.calcularTotalPedido().subtract(calcularTotalGananciaPedido(pedido)));
 			}
 		}
 			
 		for (Personal persona: unidadVenta.getLstPersonal()) {
-			totalPersonalCoste += persona.calcularSueldo(festival.getCostoFestival());
+			//totalPersonalCoste += persona.calcularSueldo(festival.getCostoFestival());
+			totalPersonalCoste = totalPersonalCoste.add(persona.calcularSueldo(festival.getCostoFestival()));
 		}
 			
 			
-		totalUnidadVenta -= (unidadVenta.calcularCanon(festival.getCostoFestival()) + totalPersonalCoste);
+		//totalUnidadVenta -= (unidadVenta.calcularCanon(festival.getCostoFestival()) + totalPersonalCoste);
+		BigDecimal costoFestival = unidadVenta.calcularCanon(festival.getCostoFestival()).add(totalPersonalCoste);
+		totalUnidadVenta = totalUnidadVenta.subtract(costoFestival);
 		
 		return totalUnidadVenta;
 	}
@@ -250,19 +268,23 @@ public class Sistema {
 	/// CU #9
 	
 	
-	public double calcularRentabilidadNetaUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate inicio, LocalDate fin)throws Exception {
+	public BigDecimal calcularRentabilidadNetaUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate inicio, LocalDate fin)throws ExceptionSinRegistro {
 		
-		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new Exception ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
+		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new ExceptionSinRegistro ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
 		
-		double totalRentabilidad = 0;
+		BigDecimal totalRentabilidad = BigDecimal.ZERO;
 		List<Festival> festivales = new ArrayList<>();
 		
-		for (Pedido pedido: lstPedidos) {
+		for (Pedido pedido: mapPedidos.values()) {
 			if (pedido.getUnidadVenta().equals(unidadVenta)) {
 			
 				if ((pedido.getFechaTransaccion().isAfter(inicio) || pedido.getFechaTransaccion().equals(inicio)) && (pedido.getFechaTransaccion().isBefore(fin) ||pedido.getFechaTransaccion().equals(fin))) {
-		           
-		                totalRentabilidad += (pedido.calcularTotalPedido() - pedido.calcularTotalCosteProduccion());
+			
+						//totalRentabilidad += (pedido.calcularTotalPedido() - pedido.calcularTotalCosteProduccion());
+						//BigDecimal totalPedido = pedido.calcularTotalPedido().subtract(pedido.calcularTotalCosteProduccion());
+						BigDecimal totalPedido = calcularTotalGananciaPedido(pedido);
+						totalRentabilidad = totalRentabilidad.add(totalPedido);
+		                
 		  
 		                if (!festivales.contains(pedido.getFestival())) {
 		                    festivales.add(pedido.getFestival());
@@ -273,14 +295,16 @@ public class Sistema {
 			
 			for (Festival festival : festivales) {
 		        
-		        double canonFestival = unidadVenta.calcularCanon(festival.getCostoFestival());
-		        totalRentabilidad -= canonFestival;
+		        BigDecimal canonFestival = unidadVenta.calcularCanon(festival.getCostoFestival());
+		        //totalRentabilidad -= canonFestival;
+				totalRentabilidad = totalRentabilidad.subtract(canonFestival);
 		        
-		        double sueldosFestival = 0;
+		        BigDecimal sueldosFestival = BigDecimal.ZERO;
 		        for (Personal persona : unidadVenta.getLstPersonal()) {
-		            sueldosFestival += persona.calcularSueldo(festival.getCostoFestival());
+		            //sueldosFestival += persona.calcularSueldo(festival.getCostoFestival());
+					sueldosFestival = sueldosFestival.add(persona.calcularSueldo(festival.getCostoFestival()));
 		        }
-		        totalRentabilidad -= sueldosFestival;
+		        totalRentabilidad = totalRentabilidad.subtract(sueldosFestival);
 		    }
 
 		    return totalRentabilidad;
@@ -291,14 +315,15 @@ public class Sistema {
 	/// CU #10
 	 
 
-	public List<ReporteVenta> generarRankingUnidadesMayorRecaudacion(Festival festival)throws Exception{
-		if (traerFestival(festival.getNombreFestival()) == null) throw new Exception ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+	public List<ReporteVenta> generarRankingUnidadesMayorRecaudacion(Festival festival)throws ExceptionSinRegistro{
+		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
 		List<ReporteVenta> lstRecaudacionUnidades = generarReporteRecaudacion(festival);
 		
 		for (int i = 0; i < lstRecaudacionUnidades.size(); i++) {
 			for (int j = i + 1; j <lstRecaudacionUnidades.size(); j++) {
-				if (lstRecaudacionUnidades.get(j).getRecaudacionTotal() > lstRecaudacionUnidades.get(i).getRecaudacionTotal()) {
+				//if (lstRecaudacionUnidades.get(j).getRecaudacionTotal() > lstRecaudacionUnidades.get(i).getRecaudacionTotal()) {
+				if (lstRecaudacionUnidades.get(j).getRecaudacionTotal().compareTo(lstRecaudacionUnidades.get(i).getRecaudacionTotal()) > 0)  {
 					ReporteVenta aux = lstRecaudacionUnidades.get(i);
 					lstRecaudacionUnidades.set(i, lstRecaudacionUnidades.get(j));
 					lstRecaudacionUnidades.set(j, aux);
@@ -315,11 +340,11 @@ public class Sistema {
 	/// CU #11
 	
 	
-	public Plato obtenerPlatoEstrella(UnidadVenta unidadVenta, Festival festival) throws Exception{
+	public Plato obtenerPlatoEstrella(UnidadVenta unidadVenta, Festival festival) throws ExceptionSinRegistro{
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new Exception ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
-		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new Exception ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");	
+		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new ExceptionSinRegistro ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");	
 		
 		Plato platoEstrella = null;
 	    int maxCantidadGlobal = -1; 
@@ -329,7 +354,7 @@ public class Sistema {
 	        int acumuladorCantidadPlato = 0;
 	        
 
-	        for (Pedido pedido : lstPedidos) {
+	        for (Pedido pedido : mapPedidos.values()) {
 	            if (pedido.getUnidadVenta().equals(unidadVenta) && pedido.getFestival().equals(festival)) {
 	                
 
@@ -357,9 +382,9 @@ public class Sistema {
 
 	
 	
-	public 	List<Personal> traerPersonalPorFestival(Festival festival) throws Exception{
+	public 	List<Personal> traerPersonalPorFestival(Festival festival) throws ExceptionSinRegistro{
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new Exception ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
 		List<Personal> lstPersonalFestival = new ArrayList<Personal>();
 		
@@ -380,32 +405,43 @@ public class Sistema {
 	/// CU #13
 	
 	
-	public List<ReporteMayoresCanon> obtenerUnidadesConMayorCanon(Festival festival)throws Exception{
+	public List<ReporteMayoresCanon> obtenerUnidadesConMayorCanon(Festival festival)throws ExceptionSinRegistro{
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new Exception ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
 		List<ReporteMayoresCanon> lstTodosLosCanones = new ArrayList<>();
 
 	    
-	    for (UnidadVenta unidad : lstUnidadVenta) {
+	    for (UnidadVenta unidad : mapUnidadVentas.values()) {
 	    	
 	    	boolean estuvoPresente = false;
-	    	int i = 0;
+	    	//int i = 0;
 	    	
-	       while (i < lstPedidos.size() && estuvoPresente == false) {
-	            if (lstPedidos.get(i).getUnidadVenta().equals(unidad) && lstPedidos.get(i).getFestival().equals(festival)) {
-	                estuvoPresente = true;
-	            }
-	            i++;
-	        }
+	    //    while (i < mapPedidos.values().size() && estuvoPresente == false) {
+	    //         if (mapPedidos.values().get(i).getUnidadVenta().equals(unidad) && mapPedidos.values().get(i).getFestival().equals(festival)) {
+	    //             estuvoPresente = true;
+	    //         }
+	    //         i++;
+	    //     }
 
-	        if (!estuvoPresente) {
-	            continue;
-	        }
+	        // if (!estuvoPresente) {
+	        //     continue;
+	        // }
+
+			for (Pedido pedido : mapPedidos.values()) {
+        		if (pedido.getUnidadVenta().equals(unidad) && pedido.getFestival().equals(festival)) {
+					estuvoPresente = true;
+					break;
+        		}
+    		}
+
+			if (!estuvoPresente) {
+				continue;
+			}
 	    	
 
 	    	
-	        double canonCalculado = unidad.calcularCanon(festival.getCostoFestival());
+	        BigDecimal canonCalculado = unidad.calcularCanon(festival.getCostoFestival());
 	        
 	        
 	        String tipoUnidad = "Puesto Desarmable";
@@ -420,7 +456,8 @@ public class Sistema {
 	 
 	    for (int i = 0; i < lstTodosLosCanones.size(); i++) {
 	        for (int j = i + 1; j < lstTodosLosCanones.size(); j++) {
-	            if (lstTodosLosCanones.get(j).getCanon() > lstTodosLosCanones.get(i).getCanon()) {
+	            //if (lstTodosLosCanones.get(j).getCanon() > lstTodosLosCanones.get(i).getCanon()) {
+				if (lstTodosLosCanones.get(j).getCanon().compareTo( lstTodosLosCanones.get(i).getCanon()) > 0) {
 	                ReporteMayoresCanon aux = lstTodosLosCanones.get(i);
 	                lstTodosLosCanones.set(i, lstTodosLosCanones.get(j));
 	                lstTodosLosCanones.set(j, aux);
@@ -438,4 +475,13 @@ public class Sistema {
 
 	    return top3Canon;
 	}
+
+
+		public BigDecimal calcularTotalGananciaPedido(Pedido pedido){
+
+			BigDecimal total = pedido.calcularTotalPedido().subtract(pedido.calcularTotalCosteProduccion());
+
+			return total;
+		}
+	
 }

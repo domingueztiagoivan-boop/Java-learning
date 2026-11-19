@@ -39,11 +39,17 @@ public class Plato {
 	}
 	
 	@Override
+	public int hashCode(){
+		return nombrePlato.hashCode();
+	}
+
+
+	@Override
 	public boolean equals(Object obj) {
 		if(this == obj)return true;
 		if (!(obj instanceof Plato)) return false;
 		Plato p = (Plato) obj;
-		return (this.idPlato == p.getIdPlato());
+		return (this.nombrePlato.equals(p.getNombrePlato()));
 	}
 
 

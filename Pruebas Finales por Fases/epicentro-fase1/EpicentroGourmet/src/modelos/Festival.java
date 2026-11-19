@@ -68,12 +68,12 @@ public class Festival {
 		if (this == obj) return true;
 		if (!(obj instanceof Festival)) return false;
 		Festival f = (Festival) obj;
-		return (this.idFestival == f.getIdFestival());
+		return (this.nombreFestival.equals(f.getNombreFestival()));
 	}
 
 	@Override
 	public int hashCode(){
-		return Integer.hashCode(idFestival);
+		return nombreFestival.hashCode();
 	}
 	
 	public Pedido traerPedidoFestival(int idPedido) {

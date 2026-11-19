@@ -1,5 +1,6 @@
 package modelos;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Cocinero extends Personal{
@@ -7,7 +8,7 @@ public class Cocinero extends Personal{
 	private double plusCategoria;
 	
 	
-	public Cocinero(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String especialidadCulinaria, double plusCategoria) {
+	public Cocinero(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String especialidadCulinaria, double plusCategoria) throws ExceptionFechaNacimiento {
 		super(idPersonal, nombre, apellido, dni, fechaNacimiento, fechaIngreso);
 		this.especialidadCulinaria = especialidadCulinaria;
 		this.plusCategoria = plusCategoria;
@@ -28,8 +29,9 @@ public class Cocinero extends Personal{
 		this.plusCategoria = plusCategoria;
 	}
 	
-	public double calcularSueldo(Costo costo) {
-		return costo.getSueldoBase() + this.plusCategoria;
+	public BigDecimal calcularSueldo(Costo costo) {
+		BigDecimal total = costo.getSueldoBase().add(new BigDecimal(plusCategoria));
+		return total;
 	}
 
 

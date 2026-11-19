@@ -61,8 +61,18 @@ public abstract class UnidadVenta {
 		
 		
 		
-		public boolean equals(UnidadVenta unidadVenta) {
-			return (unidadVenta.getCodigo().equals(this.codigo));
+		@Override
+		public boolean equals(Object obj){
+			if (this == obj) return true;
+			if (!(obj instanceof UnidadVenta)) return false;
+			UnidadVenta u = (UnidadVenta) obj;
+			return (this.codigo.equals(u.getCodigo()));
+		}
+
+
+		@Override
+		public int hashCode(){
+			return codigo.hashCode();
 		}
 
 		@Override

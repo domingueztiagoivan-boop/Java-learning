@@ -1,11 +1,12 @@
 package modelos;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Cajero extends Personal{
 		private String turnoTrabajo;
 		
-		public Cajero(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String turnoTrabajo) {
+		public Cajero(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String turnoTrabajo) throws ExceptionFechaNacimiento {
 			super(idPersonal, nombre, apellido, dni, fechaNacimiento, fechaIngreso);
 			this.turnoTrabajo = turnoTrabajo;
 		}
@@ -19,8 +20,11 @@ public class Cajero extends Personal{
 		}
 		
 		
-		public double calcularSueldo(Costo costo) {
-			return (costo.getSueldoBase() + (costo.getPlusAnioAntiguedad() * calcularAntiguedad()));
+		public BigDecimal calcularSueldo(Costo costo) {
+			
+			BigDecimal totalAntiguedad = costo.getPlusAnioAntiguedad().multiply(new BigDecimal(calcularAntiguedad()));
+			BigDecimal total = costo.getSueldoBase().add(totalAntiguedad);
+			return total;
 		}
 
 
