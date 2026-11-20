@@ -1,15 +1,20 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class ReporteMayoresCanon {
 	private final String nombreComercial;
 	private final String codigo;
-	private final String tipoUnidad;
+	private final TipoUnidad tipoUnidad;
 	private BigDecimal canon;
 	
 	
-	public ReporteMayoresCanon(String nombreComercial, String codigo, String tipoUnidad, BigDecimal canon) {
+	public ReporteMayoresCanon(String nombreComercial, String codigo, TipoUnidad tipoUnidad, BigDecimal canon) {
+		Objects.requireNonNull(nombreComercial, "ERROR. El nombre no puede ser un atributo null.");
+		Objects.requireNonNull(codigo, "ERROR. El codigo no puede ser un atributo null.");
+		Objects.requireNonNull(tipoUnidad, "ERROR. El tipo unidad no puede ser un atributo null.");
+		Objects.requireNonNull(canon, "ERROR. El canon no puede ser un atributo null.");
 		this.nombreComercial = nombreComercial;
 		this.codigo = codigo;
 		this.tipoUnidad = tipoUnidad;
@@ -25,7 +30,7 @@ public class ReporteMayoresCanon {
 		return codigo;
 	}
 	
-	public String getTipoUnidad() {
+	public TipoUnidad getTipoUnidad() {
 		return tipoUnidad;
 	}
 	
@@ -39,7 +44,7 @@ public class ReporteMayoresCanon {
 
 	@Override
 	public String toString() {
-		return "ReporteMayoresCanon [nombreComercial=" + nombreComercial + ", codigo=" + codigo + ", tipoUnidad=" + tipoUnidad + ", canon=" + canon + "]";
+		return "ReporteMayoresCanon [nombreComercial=" + nombreComercial + ", codigo=" + codigo + ", tipoUnidad=" + tipoUnidad.getDescripcion() + ", canon=" + canon + "]";
 	}
 	
 	@Override

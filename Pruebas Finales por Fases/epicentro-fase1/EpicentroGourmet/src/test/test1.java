@@ -18,32 +18,31 @@ public class test1 {
             System.out.println("\n--- [Carga de Datos] ---");           
 
             //Costo costoFest = new Costo(100000, 500, 5000, 10, 2000);
-            Costo costoFest = new Costo(1, new BigDecimal("100000"), new BigDecimal("500"), new BigDecimal("5000"), new BigDecimal("10"), new BigDecimal("2000"));
+            try{
+                Costo costoFest = new Costo(1, new BigDecimal("100000"), new BigDecimal("500"), new BigDecimal("5000"), new BigDecimal("10"), new BigDecimal("2000"));
+                sistema.agregarFestival("Festival de la Cerveza", Temporada.PRIMAVERA, LocalDate.of(2026, 10, 1), LocalDate.of(2026, 10, 5), costoFest);
+                sistema.agregarFestival("Festival de la Hamburguesa", Temporada.VERANO, LocalDate.of(2027, 1, 1), LocalDate.of(2027, 1, 5), costoFest);
+            } catch  (ExceptionMenorZero | ExceptionYaRegistrado | ExceptionFechasLimites e) {
+                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
+            } 
             
-            sistema.agregarFestival("Festival de la Cerveza", "Primavera", LocalDate.of(2026, 10, 1), LocalDate.of(2026, 10, 5), costoFest);
-            sistema.agregarFestival("Festival de la Hamburguesa", "Verano", LocalDate.of(2027, 1, 1), LocalDate.of(2027, 1, 5), costoFest);
             System.out.println("✔ Festivales agregados con éxito.");
 
             // Cargamos un staff amplio (10 personas)
-            sistema.agregarPersonalCocinero("Juan", "Pérez", 35111222L, LocalDate.of(1990, 5, 15), LocalDate.of(2020, 1, 1), "Gourmet", 5000);
-            sistema.agregarPersonalCajero("Ana", "Gómez", 40333444L, LocalDate.of(1997, 8, 20), LocalDate.of(2022, 3, 1), "Tarde");
-            sistema.agregarPersonalCocinero("Luis", "Rodríguez", 38555666L, LocalDate.of(1994, 12, 10), LocalDate.of(2021, 5, 1), "Barra", 3000);
-            sistema.agregarPersonalCajero("Pedro", "Martínez", 42111222L, LocalDate.of(1999, 3, 25), LocalDate.of(2023, 2, 15), "Mañana");
-            sistema.agregarPersonalCocinero("Carlos", "López", 33444555L, LocalDate.of(1988, 7, 14), LocalDate.of(2019, 6, 10), "Pescados", 6000);
-            sistema.agregarPersonalCocinero("Pablo", "Gil", 36412905L, LocalDate.of(2000, 1, 16), LocalDate.of(2020, 8, 15), "Hamburguesas", 4500);
-            sistema.agregarPersonalCocinero("Jose", "Fernandez", 19902341L, LocalDate.of(1985, 2, 24), LocalDate.of(2018, 4, 20), "Gourmet", 5000);
-            sistema.agregarPersonalCajero("Matias", "Lescano", 42544248L, LocalDate.of(2001, 7, 9), LocalDate.of(2023, 10, 18), "Tarde");
-            sistema.agregarPersonalCocinero("Alan", "López", 39342560L, LocalDate.of(1998, 6, 30), LocalDate.of(2022, 5, 20), "Gourmet", 5000);
-            sistema.agregarPersonalCajero("Santiago", "Mendez", 42323049L, LocalDate.of(2001, 5, 21), LocalDate.of(2023, 10, 10), "Mañana");
+            sistema.agregarPersonalCocinero("Juan", "Pérez", 35111222L, LocalDate.of(1990, 5, 15), LocalDate.of(2020, 1, 1), "Gourmet", new BigDecimal("5000"));
+            sistema.agregarPersonalCajero("Ana", "Gómez", 40333444L, LocalDate.of(1997, 8, 20), LocalDate.of(2022, 3, 1), Turno.TARDE);
+            sistema.agregarPersonalCocinero("Luis", "Rodríguez", 38555666L, LocalDate.of(1994, 12, 10), LocalDate.of(2021, 5, 1), "Barra", new BigDecimal("3000"));
+            sistema.agregarPersonalCajero("Pedro", "Martínez", 42111222L, LocalDate.of(1999, 3, 25), LocalDate.of(2023, 2, 15), Turno.MANANA);
+            sistema.agregarPersonalCocinero("Carlos", "López", 33444555L, LocalDate.of(1988, 7, 14), LocalDate.of(2019, 6, 10), "Pescados", new BigDecimal("6000"));
+            sistema.agregarPersonalCocinero("Pablo", "Gil", 36412905L, LocalDate.of(2000, 1, 16), LocalDate.of(2020, 8, 15), "Hamburguesas", new BigDecimal("4500"));
+            sistema.agregarPersonalCocinero("Jose", "Fernandez", 19902341L, LocalDate.of(1985, 2, 24), LocalDate.of(2018, 4, 20), "Gourmet", new BigDecimal("5000"));
+            sistema.agregarPersonalCajero("Matias", "Lescano", 42544248L, LocalDate.of(2001, 7, 9), LocalDate.of(2023, 10, 18), Turno.TARDE);
+            sistema.agregarPersonalCocinero("Alan", "López", 39342560L, LocalDate.of(1998, 6, 30), LocalDate.of(2022, 5, 20), "Gourmet", new BigDecimal("5000"));
+            sistema.agregarPersonalCajero("Santiago", "Mendez", 42323049L, LocalDate.of(2001, 5, 21), LocalDate.of(2023, 10, 10), Turno.MANANA);
             System.out.println("✔ Personal agregado con éxito.");
-        } catch  (ExceptionYaRegistrado e) {
+        } catch  (ExceptionYaRegistrado | ExceptionFechaNacimiento | ExceptionMenorZero e) {
             System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-            e.printStackTrace();
-        }
-        catch  (ExceptionFechaNacimiento e) {
-            System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-            e.printStackTrace();
-        }
+        } 
             
             
             try {
@@ -53,12 +52,8 @@ public class test1 {
             sistema.agregarUnidadPuestoDesarmable("Beer Stand", sistema.traerPersonal(40333444L), 20.0, "PD-01", 2, 60);
             sistema.agregarUnidadFoodTruck("Taco Truck", sistema.traerPersonal(33444555L), 12.0, "FT-02", "BBB222", false);
             sistema.agregarUnidadPuestoDesarmable("Delicias Stand", sistema.traerPersonal(19902341L), 18.0, "PD-02", 2, 50);
-            } catch (ExceptionYaRegistrado e){
+            } catch (ExceptionYaRegistrado | ExceptionSinRegistro | ExceptionMenorZero e){
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionSinRegistro e){
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
             
 
@@ -73,10 +68,9 @@ public class test1 {
             sistema.agregarPlato("Bondiola Braseada", new BigDecimal("17000.0"), new BigDecimal("7600.0"));
             sistema.agregarPlato("Risotto de Hongos", new BigDecimal("14500.0"), new BigDecimal("6300.0"));
             sistema.agregarPlato("Cannoli de Pistacho", new BigDecimal("11500.0"), new BigDecimal("4500.0"));
-            } catch (ExceptionYaRegistrado e) {
+            } catch (ExceptionYaRegistrado | ExceptionMenorZero e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            } 
          
             System.out.println("✔ Platos agregados al menú global.");
 
@@ -112,25 +106,17 @@ public class test1 {
                 sistema.traerUnidadVenta("FT-01").agregarPlatoUnidadVenta(sistema.traerPlato("Hamburguesa Gourmet"));
                 sistema.traerUnidadVenta("FT-01").agregarPersonalCocineroUnidadVenta(sistema.traerPersonal(35111222));
                 sistema.traerUnidadVenta("FT-01").agregarPersonalCajeroUnidadVenta(sistema.traerPersonal(42323049));
-            } catch (ExceptionYaRegistrado e){
+            } catch (ExceptionYaRegistrado | ExceptionSinRegistro e){
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionSinRegistro e){
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            } 
 
             try {
                 sistema.traerUnidadVenta("PD-01").agregarPlatoUnidadVenta(sistema.traerPlato("Cerveza Artesanal")); 
                 sistema.traerUnidadVenta("PD-01").agregarPersonalCajeroUnidadVenta(sistema.traerPersonal(40333444));
                 sistema.traerUnidadVenta("PD-01").agregarPersonalCocineroUnidadVenta(sistema.traerPersonal(38555666));
-            } catch (ExceptionSinRegistro e){
+            } catch (ExceptionSinRegistro | ExceptionYaRegistrado e){
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionYaRegistrado e){
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            } 
 
 
             try {
@@ -138,12 +124,8 @@ public class test1 {
                 sistema.traerUnidadVenta("FT-02").agregarPlatoUnidadVenta(sistema.traerPlato("Papas Fritas"));
                 sistema.traerUnidadVenta("FT-02").agregarPersonalCajeroUnidadVenta(sistema.traerPersonal(42111222));
                 sistema.traerUnidadVenta("FT-02").agregarPersonalCocineroUnidadVenta(sistema.traerPersonal(39342560));
-            } catch (ExceptionSinRegistro e){
+            } catch (ExceptionSinRegistro | ExceptionYaRegistrado e){
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionYaRegistrado e){
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
             
             try {
@@ -153,13 +135,9 @@ public class test1 {
                 sistema.traerUnidadVenta("PD-02").agregarPersonalCocineroUnidadVenta(sistema.traerPersonal(36412905));
                 sistema.traerUnidadVenta("PD-02").agregarPersonalCocineroUnidadVenta(sistema.traerPersonal(19902341));
                 sistema.traerUnidadVenta("PD-02").agregarPersonalCajeroUnidadVenta(sistema.traerPersonal(42544248));    
-        	} catch (ExceptionSinRegistro e) {
+        	} catch (ExceptionSinRegistro | ExceptionYaRegistrado e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionYaRegistrado e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            } 
 
             System.out.println("✔ Menús y Staff asignados a cada puesto correctamente.");
 
@@ -175,10 +153,9 @@ public class test1 {
                 sistema.registrarPedido(LocalDate.of(2026, 10, 2), sistema.traerFestival("Festival de la Cerveza"), sistema.traerUnidadVenta("PD-01"));
                 sistema.registrarPedido(LocalDate.of(2026, 10, 3), sistema.traerFestival("Festival de la Cerveza"), sistema.traerUnidadVenta("FT-02"));
                 sistema.registrarPedido(LocalDate.of(2026, 10, 4), sistema.traerFestival("Festival de la Cerveza"), sistema.traerUnidadVenta("FT-01")); // Segundo pedido de Burger Truck
-            } catch (ExceptionSinRegistro e) {
+            } catch (ExceptionSinRegistro | ExceptionYaRegistrado | ExceptionMenorZero e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            } 
             
             // Registramos pedidos festival Hamburguesa
 
@@ -188,10 +165,9 @@ public class test1 {
             sistema.registrarPedido(LocalDate.of(2027, 1, 3), sistema.traerFestival("Festival de la Hamburguesa"), sistema.traerUnidadVenta("PD-01"));
             sistema.registrarPedido(LocalDate.of(2027, 1, 3), sistema.traerFestival("Festival de la Hamburguesa"), sistema.traerUnidadVenta("FT-01"));
             sistema.registrarPedido(LocalDate.of(2027, 1, 4), sistema.traerFestival("Festival de la Hamburguesa"), sistema.traerUnidadVenta("FT-02"));
-            } catch (ExceptionSinRegistro e) {
+            } catch (ExceptionSinRegistro | ExceptionYaRegistrado | ExceptionMenorZero e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            } 
             
             // try {
             //     Pedido ped1 = sistema.traerPedido(1);
@@ -218,13 +194,9 @@ public class test1 {
             sistema.traerPedido(3).agregarDetallePedido(sistema.traerPlato("Taco de Carne"), 35); 
             sistema.traerPedido(3).agregarDetallePedido(sistema.traerPlato("Papas Fritas"), 15);
             sistema.traerPedido(4).agregarDetallePedido(sistema.traerPlato("Papas Fritas"), 10);
-            } catch (ExceptionSinRegistro e) {
+            } catch (ExceptionSinRegistro | ExceptionDetallePedidoPlatoYaInlcuido | ExceptionMenorZero e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionDetallePedidoPlatoYaInlcuido e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            } 
 
             try {
                 sistema.traerPedido(5).agregarDetallePedido(sistema.traerPlato("Cannoli de Pistacho"), 30);
@@ -236,40 +208,36 @@ public class test1 {
                 sistema.traerPedido(9).agregarDetallePedido(sistema.traerPlato("Cannoli de Pistacho"), 40);
                 sistema.traerPedido(9).agregarDetallePedido(sistema.traerPlato("Risotto de Hongos"), 20);
                 sistema.traerPedido(9).agregarDetallePedido(sistema.traerPlato("Bondiola Braseada"), 35);
-            } catch (ExceptionSinRegistro e) {
+            } catch (ExceptionSinRegistro | ExceptionDetallePedidoPlatoYaInlcuido | ExceptionMenorZero e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionDetallePedidoPlatoYaInlcuido e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
             
-            try {
-                sistema.traerFestival("Festival de la Cerveza").agregarPedidoFestival(sistema.traerPedido(1));
-                sistema.traerFestival("Festival de la Cerveza").agregarPedidoFestival(sistema.traerPedido(2));
-                sistema.traerFestival("Festival de la Cerveza").agregarPedidoFestival(sistema.traerPedido(3));
-                sistema.traerFestival("Festival de la Cerveza").agregarPedidoFestival(sistema.traerPedido(4));
-            } catch (ExceptionSinRegistro e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionYaRegistrado e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            // try {
+            //     sistema.traerFestival("Festival de la Cerveza").agregarPedidoFestival(sistema.traerPedido(1));
+            //     sistema.traerFestival("Festival de la Cerveza").agregarPedidoFestival(sistema.traerPedido(2));
+            //     sistema.traerFestival("Festival de la Cerveza").agregarPedidoFestival(sistema.traerPedido(3));
+            //     sistema.traerFestival("Festival de la Cerveza").agregarPedidoFestival(sistema.traerPedido(4));
+            // } catch (ExceptionSinRegistro e) {
+            //     System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
+            //     e.printStackTrace();
+            // } catch (ExceptionYaRegistrado e) {
+            //     System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
+            //     e.printStackTrace();
+            // }
 
-            try {
-                sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(5));
-                sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(6));
-                sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(7));
-                sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(8));
-                sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(9));
-            } catch (ExceptionSinRegistro e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            } catch (ExceptionYaRegistrado e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
-            }
+            // try {
+            //     sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(5));
+            //     sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(6));
+            //     sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(7));
+            //     sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(8));
+            //     sistema.traerFestival("Festival de la Hamburguesa").agregarPedidoFestival(sistema.traerPedido(9));
+            // } catch (ExceptionSinRegistro e) {
+            //     System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
+            //     e.printStackTrace();
+            // } catch (ExceptionYaRegistrado e) {
+            //     System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
+            //     e.printStackTrace();
+            // }
             
             
             
@@ -293,9 +261,8 @@ public class test1 {
 	            for (ReporteVenta r : recaudaciones2) {
 	                System.out.println("Unidad: " + r.getUnidadVenta().getNombreComercial() + " - Recaudó: $" + r.getRecaudacionTotal());
 	            }
-            } catch (ExceptionSinRegistro e) {
+            } catch (ExceptionSinRegistro | ExceptionMenorZero e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
 
             System.out.println("\n--- [CU #7: Personal Nacido Entre Fechas] ---");
@@ -307,7 +274,6 @@ public class test1 {
 	            }
             } catch (Exception e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
 
             System.out.println("\n--- [CU #8: Rentabilidad Neta de Unidad] ---");
@@ -322,10 +288,8 @@ public class test1 {
 	            System.out.println("Rentabilidad Neta de '" + sistema.traerUnidadVenta("PD-02").getNombreComercial() + "': $" + rentabilidadPD2);
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } catch (Exception e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } 
 
             System.out.println("\n--- [CU #9: Rentabilidad Entre Fechas] ---");
@@ -337,11 +301,9 @@ public class test1 {
 	            System.out.println("Rentabilidad 'Burger Truck' (Rango 1 al 5 de Ene): $" + rentabilidadRango2);
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
             catch (Exception e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } 
 
             System.out.println("\n--- [CU #10: Ranking Unidades Mayor Recaudación] ---");
@@ -364,10 +326,8 @@ public class test1 {
 	            }
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }  catch (Exception e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } 
 
             System.out.println("\n--- [CU #11: Plato Estrella] ---");
@@ -383,10 +343,8 @@ public class test1 {
 	            System.out.println("El plato estrella real de '" + sistema.traerUnidadVenta("PD-02").getNombreComercial() + "' fue: " + (estrella3 != null ? estrella3.getNombrePlato() : "Ninguno"));
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } catch (Exception e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
+                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage()); 
             }
              
             
@@ -399,10 +357,8 @@ public class test1 {
 	            }
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } catch (Exception e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
             
             System.out.println("\n-------------------------------------------------\n");
@@ -414,10 +370,8 @@ public class test1 {
 	            }
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } catch (Exception e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
 
             System.out.println("\n--- [CU #13: Top 3 Unidades con Mayor Canon] ---");
@@ -429,10 +383,8 @@ public class test1 {
 	            }
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } catch (Exception e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
             
             System.out.println("\n-------------------------------------------------\n");
@@ -440,21 +392,24 @@ public class test1 {
 	            System.out.println("\n---------- Festival Hamburguesas ----------");
 	            List<ReporteMayoresCanon> topCanones2 = sistema.obtenerUnidadesConMayorCanon(sistema.traerFestival("Festival de la Hamburguesa"));
 	            for (ReporteMayoresCanon r : topCanones2) {
-	                System.out.println("Podio Canon -> Unidad: " + r.getNombreComercial() + " [" + r.getTipoUnidad() + "] - Canon: $" + r.getCanon());
+	                System.out.println("Podio Canon -> Unidad: " + r.getNombreComercial() + " [" + r.getTipoUnidad().getDescripcion() + "] - Canon: $" + r.getCanon());
 	            }
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             } catch (Exception e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-                e.printStackTrace();
             }
         
         
         System.out.println("\n==================================================");
         System.out.println("         FIN DEL TESTEO DE CASOS DE USO           ");
         System.out.println("==================================================");
-
+        
+        try{
+        System.out.println(sistema.traerFestival("Festival de la Hamburguesa").getTemporadaFestival().getDescripcion());
+        } catch (ExceptionSinRegistro e) {
+                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
+            }
 	}
 
 }

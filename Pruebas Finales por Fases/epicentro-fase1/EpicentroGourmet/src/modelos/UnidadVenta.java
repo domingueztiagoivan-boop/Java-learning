@@ -1,7 +1,6 @@
 package modelos;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,11 +16,15 @@ public abstract class UnidadVenta {
 		
 		
 		
-		public UnidadVenta(int idUnidadVenta, String nombreComercial, Personal responsable, double superficie, String codigo) {
-				this.idUnidadVenta = idUnidadVenta;
+		public UnidadVenta(int idUnidadVenta, String nombreComercial, Personal responsable, double superficie, String codigo)throws ExceptionMenorZero {
+				Objects.requireNonNull(nombreComercial, "ERROR. El nombre venta no puede ser un atributo null.");
+				Objects.requireNonNull(responsable, "ERROR. El responsable venta no puede ser un atributo null.");
+				Objects.requireNonNull(codigo, "ERROR. El codigo venta no puede ser un atributo null.");
+
+				this.idUnidadVenta = validarId(idUnidadVenta);
 				this.nombreComercial = nombreComercial;
 				this.responsable = responsable;
-				this.superficie = superficie;
+				this.superficie = validarSuperficie(superficie);
 				this.codigo = codigo;
 				this.lstPlatos = new ArrayList<Plato>();
 				this.lstPersonal = new ArrayList<Personal>();
@@ -52,11 +55,11 @@ public abstract class UnidadVenta {
 		}
 		
 		public List<Plato> getLstPlatos() {
-			return lstPlatos;
+			return List.copyOf(lstPlatos);
 		}
 		
 		public List<Personal> getLstPersonal() {
-			return lstPersonal;
+			return List.copyOf(lstPersonal);
 		}
 		
 		
@@ -98,7 +101,7 @@ public abstract class UnidadVenta {
 			int  i = 0;
 			
 			while (i < this.lstPlatos.size() && resultado == null) {
-				if (this.lstPlatos.get(i).equals(nombrePlato)) {
+				if (this.lstPlatos.get(i).getNombrePlato().equals(nombrePlato)) {
 					resultado = this.lstPlatos.get(i);
 				}
 				i++;
@@ -124,12 +127,23 @@ public abstract class UnidadVenta {
 			if (traerPersonalUnidadVenta(cocinero1.getDni()) != null) throw new ExceptionYaRegistrado("ERROR. El personal con DNI " + cocinero1.dni + " ya se encuentra registrado en el staff unidad vernta.");
 			
 			return this.lstPersonal.add(cocinero1);
-			}
+		}
 	
 		public boolean agregarPersonalCajeroUnidadVenta(Personal cajero) throws ExceptionYaRegistrado {
 			if (traerPersonalUnidadVenta(cajero.getDni()) != null) throw new ExceptionYaRegistrado("ERROR. El personal con DNI " + cajero.getDni() + " ya se encuentra registrado.");
 
 			
 			return this.lstPersonal.add(cajero);
-			}
+		}
+
+
+		private static int validarId(int id)throws ExceptionMenorZero{
+			if (id < 0) throw new ExceptionMenorZero("ERROR. El id debe ser mayor a 0.");
+			return id;
+		}
+
+		private static double validarSuperficie(double superficie)throws ExceptionMenorZero{
+			if (superficie <= 0) throw new ExceptionMenorZero("ERROR. La superficie debe ser mayor a 0.");
+			return superficie;
+		}
 }

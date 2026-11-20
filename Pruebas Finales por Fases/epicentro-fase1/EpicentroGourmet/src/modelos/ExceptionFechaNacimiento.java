@@ -1,6 +1,6 @@
 package modelos;
 
-//Esta exception se lanza cuando se intenta agregar un nuevo Plato a un DetallePedido de un Pedido pero este ya esta dentro del DetallePedido. 
+//Esta exception se lanza cuando se le asigna a un personal un atributo fechaNacimiento menor a los 18 años. 
 
 
 public class ExceptionFechaNacimiento extends Exception{

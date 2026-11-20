@@ -3,23 +3,30 @@ package modelos;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Festival {
 	private final int idFestival;
 	private final String nombreFestival;
-	private final String temporadaFestival;
+	private final Temporada temporadaFestival;
 	private final LocalDate fechaInicio;
 	private final LocalDate fechaFin;
 	private final Costo costoFestival;
 	private final List<Pedido> lstPedidos;
 	
 
-	public Festival(int idFestival, String nombreFestival, String temporadaFestival, LocalDate fechaInicio, LocalDate fechaFin, Costo costoFestival) {
-			this.idFestival = idFestival;
+	public Festival(int idFestival, String nombreFestival, Temporada temporadaFestival, LocalDate fechaInicio, LocalDate fechaFin, Costo costoFestival)throws ExceptionMenorZero, ExceptionFechasLimites {
+			Objects.requireNonNull(nombreFestival, "ERROR. El nombre no puede ser un atributo null.");
+			Objects.requireNonNull(temporadaFestival, "ERROR. La temporada no puede ser un atributo null.");
+			Objects.requireNonNull(fechaInicio, "ERROR. La fecha inicio no puede ser un atributo null.");
+			Objects.requireNonNull(fechaFin, "ERROR. La fecha fin no puede ser un atributo null.");
+			Objects.requireNonNull(costoFestival, "ERROR. El costo festival no puede ser un atributo null.");
+
+			this.idFestival = validarId(idFestival);
 			this.nombreFestival = nombreFestival;
 			this.temporadaFestival = temporadaFestival;
 			this.fechaInicio = fechaInicio;
-			this.fechaFin = fechaFin;
+			this.fechaFin = validarFechaFin(fechaFin);
 			this.costoFestival = costoFestival;
 			this.lstPedidos = new ArrayList<Pedido>();
 		}
@@ -35,7 +42,7 @@ public class Festival {
 		return nombreFestival;
 	}
 	
-	public String getTemporadaFestival() {
+	public Temporada getTemporadaFestival() {
 		return temporadaFestival;
 	}
 	
@@ -52,14 +59,14 @@ public class Festival {
 	}
 	
 	public List<Pedido> getLstPedidos(){
-		return this.lstPedidos;
+		return List.copyOf(lstPedidos);
 	}
 	
 
 
 	@Override
 	public String toString() {
-		return "Festival [idFestival=" + idFestival + ", nombreFestival=" + nombreFestival + ", temporadaFestival=" + temporadaFestival + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", costoFestival=" + costoFestival + "]";
+		return "Festival [idFestival=" + idFestival + ", nombreFestival=" + nombreFestival + ", temporadaFestival=" + temporadaFestival.getDescripcion() + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", costoFestival=" + costoFestival + "]";
 	}
 	
 
@@ -95,5 +102,15 @@ public class Festival {
 		
 		return this.lstPedidos.add(pedido);
 	}
+	
 
-}
+	private static int validarId(int id)throws ExceptionMenorZero{
+		if (id < 0)throw new ExceptionMenorZero("ERROR. El id debe ser mayor o igual a 0.");
+		return id;
+	}
+
+	private LocalDate validarFechaFin(LocalDate fin)throws ExceptionFechasLimites{
+		if (fin.isAfter(fechaInicio))throw new ExceptionFechasLimites("ERROR. La fecha fin debe ser despues que la fecha de inicio.");
+		return fin;
+	}
+}	

@@ -1,6 +1,7 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class ReporteVenta {
 	private final int idReporteVenta;
@@ -8,8 +9,10 @@ public class ReporteVenta {
 	private BigDecimal recaudacionTotal;
 	
 	
-	public ReporteVenta(int idReporteVenta, UnidadVenta unidadVenta, BigDecimal recaudacionTotal) {
-		this.idReporteVenta = idReporteVenta;
+	public ReporteVenta(int idReporteVenta, UnidadVenta unidadVenta, BigDecimal recaudacionTotal) throws ExceptionMenorZero{
+		Objects.requireNonNull(unidadVenta, "ERROR. La unidad venta no puede ser un atributo null.");
+		Objects.requireNonNull(recaudacionTotal, "ERROR. La recaudacion no puede ser un atributo null.");
+		this.idReporteVenta = validarId(idReporteVenta);
 		this.unidadVenta = unidadVenta;
 		this.recaudacionTotal = recaudacionTotal;
 	}
@@ -47,5 +50,10 @@ public class ReporteVenta {
 	@Override
 	public int hashCode(){
 		return Integer.hashCode(idReporteVenta);
+	}
+
+	private static int validarId(int id)throws ExceptionMenorZero{
+			if (id < 0)throw new ExceptionMenorZero("ERROR. El id debe ser mayor o igual a 0.");
+			return id; 
 	}
 }

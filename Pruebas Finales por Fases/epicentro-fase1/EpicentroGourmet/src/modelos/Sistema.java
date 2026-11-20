@@ -103,79 +103,85 @@ public class Sistema {
 	/// Todos los agregar ------------------------
 	
 	
-	public boolean agregarFestival(String nombreFestival, String temporadaFestival, LocalDate fechaInicio, LocalDate fechaFin, Costo costoFestival)throws ExceptionYaRegistrado{
+	public boolean agregarFestival(String nombreFestival, Temporada temporadaFestival, LocalDate fechaInicio, LocalDate fechaFin, Costo costoFestival)throws ExceptionYaRegistrado, ExceptionMenorZero, ExceptionFechasLimites{
 		if (mapFestivales.containsKey(nombreFestival)) throw new ExceptionYaRegistrado("ERROR. El nombre " + nombreFestival + " Ya se encuentra registrado como festival.");
 		
 		int proxId = lastIdFestivales + 1;
-		lastIdFestivales++;
 		
 		mapFestivales.put(nombreFestival, new Festival(proxId, nombreFestival, temporadaFestival, fechaInicio, fechaFin, costoFestival));
+		lastIdFestivales++;
 		return true;
 	}
 	
-	public boolean agregarPersonalCocinero(String nombre, String apellido, Long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String especialidad, double plus) throws ExceptionYaRegistrado, ExceptionFechaNacimiento {
+	public boolean agregarPersonalCocinero(String nombre, String apellido, Long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String especialidad, BigDecimal plus) throws ExceptionYaRegistrado, ExceptionFechaNacimiento, ExceptionMenorZero {
 			if (mapPersonal.containsKey(dni)) throw new ExceptionYaRegistrado("ERROR. El personal con DNI " + dni + " ya se encuentra registrado.");
 		
 			int proxId = lastIdPersonal + 1;
-			lastIdPersonal++;
 			
 			mapPersonal.put(dni, new Cocinero(proxId, nombre, apellido, dni, fechaNacimiento, fechaIngreso, especialidad, plus));
+			lastIdPersonal++;
 			return true;
 			}
 	
-	public boolean agregarPersonalCajero(String nombre, String apellido, Long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String turno) throws ExceptionYaRegistrado, ExceptionFechaNacimiento {
+	public boolean agregarPersonalCajero(String nombre, String apellido, Long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, Turno turno) throws ExceptionYaRegistrado, ExceptionFechaNacimiento, ExceptionMenorZero{
 			if (mapPersonal.containsKey(dni)) throw new ExceptionYaRegistrado("ERROR. El personal con DNI " + dni + " ya se encuentra registrado.");
 
 			int proxId = lastIdPersonal + 1;
-			lastIdPersonal++;
 			
 			mapPersonal.put(dni, new Cajero(proxId, nombre, apellido, dni, fechaNacimiento, fechaIngreso, turno));
+			lastIdPersonal++;
 			return true;
 		}
 	
-	public boolean agregarUnidadFoodTruck(String nombreComercial, Personal responsable, double superficie, String codigo, String patente, boolean electricidad) throws ExceptionYaRegistrado {
+	public boolean agregarUnidadFoodTruck(String nombreComercial, Personal responsable, double superficie, String codigo, String patente, boolean electricidad) throws ExceptionYaRegistrado, ExceptionMenorZero {
 			if (mapUnidadVentas.containsKey(codigo)) throw new ExceptionYaRegistrado("ERROR. La unidad con código " + codigo + " ya se encuentra registrada.");
 			
 			int proxId = lastIdUnidadVenta + 1;
-			lastIdUnidadVenta++;
 
 			mapUnidadVentas.put(codigo, new FoodTruck(proxId, nombreComercial, responsable, superficie, codigo,patente, electricidad));
+			lastIdUnidadVenta++;
 			return true;
 			}
 	
-	public boolean agregarUnidadPuestoDesarmable(String nombreComercial, Personal responsable, double superficie, String codigo, int cantidadCarpas, int tiempoMontaje) throws ExceptionYaRegistrado {
+	public boolean agregarUnidadPuestoDesarmable(String nombreComercial, Personal responsable, double superficie, String codigo, int cantidadCarpas, int tiempoMontaje) throws ExceptionYaRegistrado, ExceptionMenorZero {
 			if (mapUnidadVentas.containsKey(codigo)) throw new ExceptionYaRegistrado("ERROR. La unidad con código " + codigo + " ya se encuentra registrada.");
 		
 			int proxId = lastIdUnidadVenta + 1;
-			lastIdUnidadVenta++;
 			
 			mapUnidadVentas.put(codigo, new PuestoDesarmable(proxId, nombreComercial, responsable, superficie, codigo, cantidadCarpas, tiempoMontaje));
+			lastIdUnidadVenta++;
 			return true;
 			}
 	
-	public boolean agregarPlato(String nombrePlato, BigDecimal precioVenta, BigDecimal costoProduccion)throws ExceptionYaRegistrado{
+	public boolean agregarPlato(String nombrePlato, BigDecimal precioVenta, BigDecimal costoProduccion)throws ExceptionYaRegistrado, ExceptionMenorZero{
 		if (mapPlatos.containsKey(nombrePlato)) throw new ExceptionYaRegistrado("ERROR. El plato " + nombrePlato + " ya se encuentra regitrado.");
 		
 		int proxId = lastIdPlatos + 1;
-		lastIdPlatos++;
 		
 		mapPlatos.put(nombrePlato, new Plato(proxId, nombrePlato, precioVenta, costoProduccion));
+		lastIdPlatos++;
 		return true;
 	}
 	
 	
 	/// CU #5 -------------------
 	
-	public boolean registrarPedido(LocalDate fecha, Festival festival, UnidadVenta unidadVenta) throws ExceptionSinRegistro{
+	public boolean registrarPedido(LocalDate fecha, Festival festival, UnidadVenta unidadVenta) throws ExceptionSinRegistro, ExceptionYaRegistrado, ExceptionMenorZero{
 		
-		if (!(mapFestivales.containsKey(festival.getNombreFestival()))) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
-		
-		if (!(mapUnidadVentas.containsKey(unidadVenta.getCodigo())))throw new ExceptionSinRegistro ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
-		
+		UnidadVenta v = traerUnidadVenta(unidadVenta.getCodigo());
+
+		Festival f = traerFestival(festival.getNombreFestival());
+
 		int proxId = lastIdPedidos + 1;
-		lastIdPedidos++;
 		
-		mapPedidos.put(proxId, new Pedido(proxId, fecha, festival, unidadVenta));
+		
+		Pedido p =  new Pedido(proxId, fecha, f, v);
+
+		f.agregarPedidoFestival(p);
+
+		mapPedidos.put(proxId, p);
+
+		lastIdPedidos++;
 		return true;
 	}
 	
@@ -183,7 +189,7 @@ public class Sistema {
 	
 	/// CU #6
 	
-	public List<ReporteVenta> generarReporteRecaudacion(Festival festival)throws ExceptionSinRegistro{
+	public List<ReporteVenta> generarReporteRecaudacion(Festival festival)throws ExceptionSinRegistro, ExceptionMenorZero{
 		if (!(mapFestivales.containsKey(festival.getNombreFestival()))) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
 		List<ReporteVenta> lstReporte = new ArrayList<ReporteVenta>();
@@ -247,7 +253,7 @@ public class Sistema {
 				//BigDecimal totalCosteProduccion = pedido.calcularTotalCosteProduccion();
 				//totalUnidadVenta = totalUnidadVenta.add(totalPedido.subtract(totalCosteProduccion));
 				//totalUnidadVenta = totalUnidadVenta.add(pedido.calcularTotalPedido().subtract(pedido.calcularTotalCosteProduccion()));
-				totalUnidadVenta = totalUnidadVenta.add(pedido.calcularTotalPedido().subtract(calcularTotalGananciaPedido(pedido)));
+				totalUnidadVenta = totalUnidadVenta.add(pedido.calcularTotalPedido().subtract(pedido.calcularTotalCosteProduccion()));
 			}
 		}
 			
@@ -315,7 +321,7 @@ public class Sistema {
 	/// CU #10
 	 
 
-	public List<ReporteVenta> generarRankingUnidadesMayorRecaudacion(Festival festival)throws ExceptionSinRegistro{
+	public List<ReporteVenta> generarRankingUnidadesMayorRecaudacion(Festival festival)throws ExceptionSinRegistro, ExceptionMenorZero{
 		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
 		
 		List<ReporteVenta> lstRecaudacionUnidades = generarReporteRecaudacion(festival);
@@ -444,10 +450,15 @@ public class Sistema {
 	        BigDecimal canonCalculado = unidad.calcularCanon(festival.getCostoFestival());
 	        
 	        
-	        String tipoUnidad = "Puesto Desarmable";
-	        if (unidad instanceof FoodTruck) { 
-	            tipoUnidad = "Food Truck";
-	        }
+	        // String tipoUnidad = "Puesto Desarmable";
+	        // if (unidad instanceof FoodTruck) { 
+	        //     tipoUnidad = "Food Truck";
+	        // }
+
+			TipoUnidad tipoUnidad = TipoUnidad.PUESTODESARMABLE;
+			if (unidad instanceof FoodTruck){
+				tipoUnidad = TipoUnidad.FOODTRUCK;
+			}
 
 	        lstTodosLosCanones.add(new ReporteMayoresCanon(unidad.getNombreComercial(),unidad.getCodigo(), tipoUnidad, canonCalculado));
 	        

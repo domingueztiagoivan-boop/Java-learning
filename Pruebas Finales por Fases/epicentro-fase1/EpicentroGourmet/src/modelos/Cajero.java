@@ -2,23 +2,26 @@ package modelos;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Cajero extends Personal{
-		private String turnoTrabajo;
+		private Turno turnoTrabajo;
 		
-		public Cajero(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String turnoTrabajo) throws ExceptionFechaNacimiento {
+		public Cajero(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, Turno turnoTrabajo) throws ExceptionFechaNacimiento, ExceptionMenorZero {
+			Objects.requireNonNull(turnoTrabajo, ("ERROR. El turno trabajo no puede ser parametro null."));
 			super(idPersonal, nombre, apellido, dni, fechaNacimiento, fechaIngreso);
 			this.turnoTrabajo = turnoTrabajo;
 		}
 
 		
-		public String getTurnoTrabajo() {
+		public Turno getTurnoTrabajo() {
 			return turnoTrabajo;
 		}
-		public void setTurnoTrabajo(String turnoTrabajo) {
+		//Setter se queda por si hay un ajuste de horarios en el sistema con los trabajadores.
+		public void setTurnoTrabajo(Turno turnoTrabajo) {
+			Objects.requireNonNull(turnoTrabajo, ("ERROR. El turno trabajo no puede ser parametro null."));
 			this.turnoTrabajo = turnoTrabajo;
 		}
-		
 		
 		public BigDecimal calcularSueldo(Costo costo) {
 			
@@ -30,7 +33,7 @@ public class Cajero extends Personal{
 
 		@Override
 		public String toString() {
-			return "Cajero [" + super.toString() + " turnoTrabajo=" + turnoTrabajo + "]";
+			return "Cajero [" + super.toString() + " turnoTrabajo=" + turnoTrabajo.getDescripcion() + "]";
 		}
 		
 		

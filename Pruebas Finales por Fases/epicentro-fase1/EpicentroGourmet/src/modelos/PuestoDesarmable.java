@@ -1,32 +1,46 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class PuestoDesarmable extends UnidadVenta{
 	private int cantidadCarpas;
 	private int tiempoMontajeMinutos;
 	
 	
-	public PuestoDesarmable(int idUnidadVenta, String nombreComercial, Personal responsable, double superficie, String codigo, int cantidadCarpas, int tiempoMontajeMinutos) {
+	public PuestoDesarmable(int idUnidadVenta, String nombreComercial, Personal responsable, double superficie, String codigo, int cantidadCarpas, int tiempoMontajeMinutos)throws ExceptionMenorZero {
+		Objects.requireNonNull(cantidadCarpas, "ERROR. La cantidad de carpas no puede ser un atributo null.");
+		Objects.requireNonNull(tiempoMontajeMinutos, "ERROR. El timepo de montaje no puede ser un atributo null.");
+		
 		super(idUnidadVenta, nombreComercial, responsable, superficie, codigo);
-		this.cantidadCarpas = cantidadCarpas;
-		this.tiempoMontajeMinutos = tiempoMontajeMinutos;
+		this.cantidadCarpas = validarCantidadCarpas(cantidadCarpas);
+		this.tiempoMontajeMinutos = validarTiempoMontaje(tiempoMontajeMinutos);
 	}
 
 
 	public int getCantidadCarpas() {
 		return cantidadCarpas;
 	}
-	public void setCantidadCarpas(int cantidadCarpas) {
-		this.cantidadCarpas = cantidadCarpas;
+	public void setCantidadCarpas(int cantidadCarpas) throws ExceptionMenorZero{
+		this.cantidadCarpas = validarCantidadCarpas(cantidadCarpas);
 	}
 	public int getTiempoMontajeMinutos() {
 		return tiempoMontajeMinutos;
 	}
-	public void setTiempoMontajeMinutos(int tiempoMontajeMinutos) {
-		this.tiempoMontajeMinutos = tiempoMontajeMinutos;
+	public void setTiempoMontajeMinutos(int tiempoMontajeMinutos) throws ExceptionMenorZero{
+		this.tiempoMontajeMinutos = validarTiempoMontaje(tiempoMontajeMinutos);
 	}
 
+
+	private static int validarTiempoMontaje(int tiempoMontajeMinutos) throws ExceptionMenorZero{
+		if (tiempoMontajeMinutos < 0) throw new ExceptionMenorZero("ERROR. El tiempo de montaje no puede valer 0.");
+		return tiempoMontajeMinutos;
+	}
+
+	private static int validarCantidadCarpas(int cantidadCarpas) throws ExceptionMenorZero{
+		if (cantidadCarpas < 0) throw new ExceptionMenorZero("ERROR. La cantidad de carpas no puede valer 0.");
+		return cantidadCarpas;
+	}
 
 	@Override
 	public String toString() {

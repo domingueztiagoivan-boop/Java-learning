@@ -558,8 +558,19 @@ FASE 1
 - [x] getters que no exponen listas internas (1.4 cerrado 15/11/2026)
 - [x] Map en lugar de búsquedas con while (1.6 cerrado 17/11/2026; retoques cerrados 18/11/2026)
 - [x] BigDecimal para dinero (1.5 cerrado 16/11/2026)
-- [ ] bug de Vector corregido
+- [ ] bug de Vector corregido (el alumno decidió el 20/11/2026 no hacerlo; queda NO APLICADO)
 - [ ] FASE 1 FINAL: EpicentroGourmet refactorizado en epicentro-fase1 (1.1 a 1.6)
+      EN CURSO (19 y 20/11/2026): aplicado 1.1, 1.2 (enums Turno, Temporada,
+      TipoUnidad), 1.6 en Sistema y gran parte de 1.3 y 1.4. Falta (mañana):
+        - requireNonNull de primitivos y antes de super(); criterio del cero
+          y mensajes; validaciones en Plato, PuestoDesarmable y setters.
+        - validarX a private static; atributos protected -> private;
+          setters de los reportes.
+        - BigDecimal.valueOf en vez de new BigDecimal(double) y setScale al
+          final de sueldos, canon y recaudación.
+        - Borrar los if (traerX(...) == null) de Sistema y unificar los
+          traerX internos (excepción en lugar de null).
+        - Re-correr test1 y cerrar CAMBIOS.MD.
 
 FASE 2
 - [ ] 1. Interfaces
@@ -641,6 +652,11 @@ Desde el 18/11/2026 se aplica al cierre de cada FASE, en carpetas separadas
   el resultado, compareTo (nunca equals), divide con escala y
   RoundingMode, redondear una vez al final, sin BigDecimal como clave,
   constantes con nombre.
+- [en curso] epicentro-fase1 (20/11/2026): 1.1, 1.2 y 1.6 aplicados; 1.3, 1.4
+  y 1.5 aplicados en parte (falta lo listado en la sección 9, FASE 1 FINAL).
+  Lecciones nuevas: requireNonNull no valida primitivos (boxing), validar
+  con la instancia del Sistema, lastIdX++ después del put, validarX
+  private static, criterio del cero por campo.
 - [aprendido] 1.6: Map en vez de listas con while (clave natural,
   traerX con excepción propia, duplicados con containsKey, ids con
   contador, Map.copyOf en getters, reportes sobre values()).
@@ -694,6 +710,29 @@ ESTADO: retoques de 1.3 a 1.6 CERRADOS en practicaFinalV2.
   fase en carpetas separadas, sin solapar versiones.
 - Pendientes: bug de Vector.traerElMenor, Cambios.MD, opcionales de 1.5.
 - Proxima sesion: FASE 1 FINAL, epicentro-fase1 (aplicar 1.1 a 1.6).
+
+### Sesion del 19 y 20/11/2026: Fase 1 final (epicentro-fase1)
+ESTADO: FASE 1 FINAL EN CURSO (aplicado casi todo; quedan correcciones).
+- Se aplico 1.1 a 1.6 en EpicentroGourmet (carpeta epicentro-fase1) y se
+  revisó el zip versión por versión.
+- Bugs encontrados y corregidos: CU8 restaba la ganancia en vez del coste;
+  traerPlatoUnidadVenta comparaba Plato con String; totalCantidadPlatoPedido
+  contaba detalles en vez de unidades; ids que se salteaban cuando el
+  constructor fallaba; registrarPedido guardaba el pedido en dos lugares
+  y usaba la instancia del parametro; CU13 mostraba mal el tipo de unidad.
+- Aplicado: enums Turno, Temporada y TipoUnidad; excepciones MenorZero y
+  FechasLimites con validaciones de valor; List.copyOf en Pedido; Cocinero con
+  BigDecimal; Sistema con cinco Map y registrarPedido con instancias del
+  Sistema.
+- Aprendido: requireNonNull no sirve con primitivos (boxing); un enum se
+  declara con enum minúscula, en su archivo, y se compara con ==; statements
+  antes de super() solo en JDK 25; validar con la instancia que devuelve
+  traerX; lastIdX++ después del put.
+- Decisiones: las carpetas alcanzan (el tag Git es opcional); no se hace
+  Vector.traerElMenor (queda no aplicado); setScale se agrega al final.
+- Pendientes: ver la sección 9 (FASE 1 FINAL). Se corre test1 antes y después.
+- Proxima sesion: correcciones de epicentro-fase1 en el orden a) a f) de
+  estado_estudio.md, cierre con CAMBIOS.MD; después Fase 2 (Interfaces).
 
 ### Sesiones anteriores (resumen)
 - 13/11/2026: plan armado; 1.1 (equals/hashCode) y 1.2 (enums) completos.

@@ -1,6 +1,7 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 
 public class DetallePedido {
@@ -10,10 +11,11 @@ public class DetallePedido {
 		
 		
 		
-		public DetallePedido(int idDetallePedido, Plato plato, int cantidad) {
-			this.idDetallePedido = idDetallePedido;
+		public DetallePedido(int idDetallePedido, Plato plato, int cantidad)throws ExceptionMenorZero {
+			Objects.requireNonNull(plato, "ERROR. El plato no puede ser un atributo null.");
+			this.idDetallePedido = validarId(idDetallePedido);
 			this.plato = plato;
-			this.cantidad = cantidad;
+			this.cantidad = validarCantidad(cantidad);
 		}
 
 
@@ -52,6 +54,12 @@ public class DetallePedido {
 		}
 		
 		
+		private static int validarCantidad(int cantidad)throws ExceptionMenorZero{
+			if (cantidad <= 0) throw new ExceptionMenorZero("ERRO. La cantidad debe ser mayor a 0.");
+			return cantidad;
+		}
+
+
 		public BigDecimal calcularTotalDetallePedido() {
 			BigDecimal total = plato.getPrecioVenta().multiply(BigDecimal.valueOf(cantidad));
 			return total;
@@ -62,5 +70,9 @@ public class DetallePedido {
 			return total;
 		}
 		
+		private static int validarId(int id)throws ExceptionMenorZero{
+		if (id < 0)throw new ExceptionMenorZero("ERROR. El id debe ser mayor o igual a 0.");
+		return id; 
+		}
 		
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate; 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 
@@ -15,8 +16,11 @@ public class Pedido {
 		private final List<DetallePedido> lstDetallePedido; 
 		
 		
-		public Pedido(int idPedido, LocalDate fechaTransaccion, Festival festival, UnidadVenta unidadVenta) {
-			this.idPedido = idPedido;
+		public Pedido(int idPedido, LocalDate fechaTransaccion, Festival festival, UnidadVenta unidadVenta) throws ExceptionMenorZero{
+			Objects.requireNonNull(fechaTransaccion, "ERROR. La fecha transaccion no puede ser un atributo null.");
+			Objects.requireNonNull(festival, "ERROR. El festival no puede ser un atributo null.");
+			Objects.requireNonNull(unidadVenta, "ERROR. La unidad venta no puede ser un atributo null.");
+			this.idPedido = validarId(idPedido);
 			this.fechaTransaccion = fechaTransaccion;
 			this.festival = festival;
 			this.unidadVenta = unidadVenta;
@@ -42,10 +46,15 @@ public class Pedido {
 		}
 		
 		public List<DetallePedido> getLstDetallePedido() {
-			return lstDetallePedido;
+			return List.copyOf(lstDetallePedido);
 		}
 	
 		
+
+		private static int validarId(int id)throws ExceptionMenorZero{
+			if (id < 0)throw new ExceptionMenorZero("ERROR. El id debe ser mayor o igual a 0.");
+			return id;
+		}
 
 
 		public DetallePedido traerDetallePedido(Plato plato) {
@@ -62,7 +71,7 @@ public class Pedido {
 			return resultado;
 		}
 		
-		public boolean agregarDetallePedido(Plato plato, int cantidad)throws ExceptionDetallePedidoPlatoYaInlcuido {
+		public boolean agregarDetallePedido(Plato plato, int cantidad)throws ExceptionDetallePedidoPlatoYaInlcuido, ExceptionMenorZero {
 			if (traerDetallePedido(plato) != null) throw new ExceptionDetallePedidoPlatoYaInlcuido("ERROR. Este plato ya está incluido en el pedido. Modifique su cantidad.");
 				
 			int proxId = (!lstDetallePedido.isEmpty()) ? lstDetallePedido.get(lstDetallePedido.size() - 1).getIdDetallePedido() + 1 : 1;
@@ -124,7 +133,7 @@ public class Pedido {
 			
 			for (DetallePedido pedido: lstDetallePedido) {
 				if (pedido.getPlato().equals(plato)) {
-					total++;
+					total += pedido.getCantidad();
 				}
 			}
 			return total;

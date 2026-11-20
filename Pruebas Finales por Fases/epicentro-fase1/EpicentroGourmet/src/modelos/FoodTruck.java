@@ -1,6 +1,7 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class FoodTruck extends UnidadVenta{
 	private final String patente;
@@ -8,7 +9,9 @@ public class FoodTruck extends UnidadVenta{
 	
 	
 	
-	public FoodTruck(int idUnidadVenta, String nombreComercial, Personal responsable, double superficie, String codigo, String patente, boolean requiereElectricidad) {
+	public FoodTruck(int idUnidadVenta, String nombreComercial, Personal responsable, double superficie, String codigo, String patente, boolean requiereElectricidad)throws ExceptionMenorZero{
+		Objects.requireNonNull(patente, "ERROR. La patente no puede ser un atributo null.");
+		Objects.requireNonNull(requiereElectricidad, "ERROR. El si requiere electricidad no puede ser un atributo null.");
 		super(idUnidadVenta, nombreComercial, responsable, superficie, codigo);
 		this.patente = patente;
 		this.requiereElectricidad = requiereElectricidad;
