@@ -110,7 +110,7 @@ public class Festival {
 	}
 
 	private LocalDate validarFechaFin(LocalDate fin)throws ExceptionFechasLimites{
-		if (fin.isAfter(fechaInicio))throw new ExceptionFechasLimites("ERROR. La fecha fin debe ser despues que la fecha de inicio.");
+		if (fin.isBefore(fechaInicio))throw new ExceptionFechasLimites("ERROR. La fecha fin debe ser despues que la fecha de inicio.");
 		return fin;
 	}
 }	

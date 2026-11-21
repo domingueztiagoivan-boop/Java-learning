@@ -7,12 +7,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;	
 
 public abstract class Personal {
-		protected final int idPersonal;
-		protected final String nombre;
-		protected final String apellido;
-		protected final long dni;
-		protected final LocalDate fechaNacimiento;
-		protected final LocalDate fechaIngreso;
+		private final int idPersonal;
+		private final String nombre;
+		private final String apellido;
+		private final long dni;
+		private final LocalDate fechaNacimiento;
+		private final LocalDate fechaIngreso;
 		
 		
 		public Personal(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso) throws ExceptionFechaNacimiento,  ExceptionMenorZero {

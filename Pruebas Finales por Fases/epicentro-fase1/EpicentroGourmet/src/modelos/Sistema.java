@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.math.RoundingMode;
 
 public class Sistema {
 	private final Map<String, Festival> mapFestivales;
@@ -61,42 +62,32 @@ public class Sistema {
 	/// Todos los traer ------------------------
 	
 	public Festival traerFestival(String nombreFestival)throws 	ExceptionSinRegistro {
-		if (!(mapFestivales.containsKey(nombreFestival))) throw new ExceptionSinRegistro("ERROR. El festival '" + nombreFestival + "' no se ecnunetra registrado.");
-		
 		Festival resultado = mapFestivales.get(nombreFestival);
-		
+		if (resultado == null)  throw new ExceptionSinRegistro("ERROR. El festival '" + nombreFestival + "' no se ecnunetra registrado.");
 		return resultado;
 	}
 	
 	public Personal traerPersonal(long dni) throws ExceptionSinRegistro{
-		if (!(mapPersonal.containsKey(dni))) throw new ExceptionSinRegistro("ERROR. El personal con DNI " + dni + " no se encuentra registrado.");
-
-	    Personal resultado = mapPersonal.get(dni);
-	    
+		Personal resultado = mapPersonal.get(dni);
+		if (resultado == null) throw new ExceptionSinRegistro("ERROR. El personal con DNI " + dni + " no se encuentra registrado.");
 	    return resultado;
 	}
 	
 	public UnidadVenta traerUnidadVenta(String codigo) throws ExceptionSinRegistro{
-		if (!(mapUnidadVentas.containsKey(codigo))) throw new ExceptionSinRegistro("ERROR. La unidad venta con codigo " + codigo + " no se encuentra registrada.");
-
-	    UnidadVenta resultado = mapUnidadVentas.get(codigo);
-
+		UnidadVenta resultado = mapUnidadVentas.get(codigo);
+		if (resultado == null) throw new ExceptionSinRegistro("ERROR. La unidad venta con codigo " + codigo + " no se encuentra registrada.");
 	    return resultado;
 	}
 	
 	public Plato traerPlato(String nombrePlato)throws ExceptionSinRegistro {
-		if (!(mapPlatos.containsKey(nombrePlato))) throw new ExceptionSinRegistro("ERROR. El plato " + nombrePlato + " no se encuentra registrado.");
-
-	    Plato resultado = mapPlatos.get(nombrePlato);
-	    
+		Plato resultado = mapPlatos.get(nombrePlato);
+		if (resultado == null) throw new ExceptionSinRegistro("ERROR. El plato " + nombrePlato + " no se encuentra registrado.");
 	    return resultado;
 	}
 	
 	public Pedido traerPedido(int idPedido)  throws ExceptionSinRegistro{
-		if (!(mapPedidos.containsKey(idPedido))) throw new ExceptionSinRegistro("ERROR. El pedido con id " + idPedido + " no se encuentra registrado.");
-
-	    Pedido resultado = mapPedidos.get(idPedido);
-	
+		Pedido resultado = mapPedidos.get(idPedido);
+		if (resultado == null) throw new ExceptionSinRegistro("ERROR. El pedido con id " + idPedido + " no se encuentra registrado.");
 	    return resultado;
 	}
 	
@@ -224,7 +215,7 @@ public class Sistema {
 	
 	public List<Personal> traerPersonalNacidaEntre(LocalDate inicio, LocalDate fin){
 		
-		List<Personal> lstPersonalFechas = new ArrayList<Personal>();
+		List<Personal> lstPersonalFechas = new ArrayList<>();
 		
 		for (Personal persona: mapPersonal.values()) {
 			if ((persona.getFechaNacimiento().isAfter(inicio) || persona.getFechaNacimiento().equals(inicio))  &&  (persona.getFechaNacimiento().isBefore(fin) || persona.getFechaNacimiento().equals(fin))) {
@@ -239,9 +230,10 @@ public class Sistema {
 	
 
 	public BigDecimal calcularRentabilidadNetaUnidad(UnidadVenta unidadVenta, Festival festival)throws ExceptionSinRegistro {
-		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new ExceptionSinRegistro ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
+
+		traerUnidadVenta(unidadVenta.getCodigo());
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		traerFestival(festival.getNombreFestival());
 		
 		BigDecimal totalUnidadVenta = BigDecimal.ZERO;
 		BigDecimal totalPersonalCoste = BigDecimal.ZERO;
@@ -267,7 +259,7 @@ public class Sistema {
 		BigDecimal costoFestival = unidadVenta.calcularCanon(festival.getCostoFestival()).add(totalPersonalCoste);
 		totalUnidadVenta = totalUnidadVenta.subtract(costoFestival);
 		
-		return totalUnidadVenta;
+		return totalUnidadVenta.setScale(2, RoundingMode.HALF_UP);
 	}
 	
 	
@@ -276,7 +268,7 @@ public class Sistema {
 	
 	public BigDecimal calcularRentabilidadNetaUnidadEntreFechas(UnidadVenta unidadVenta, LocalDate inicio, LocalDate fin)throws ExceptionSinRegistro {
 		
-		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new ExceptionSinRegistro ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");
+		traerUnidadVenta(unidadVenta.getCodigo());
 		
 		BigDecimal totalRentabilidad = BigDecimal.ZERO;
 		List<Festival> festivales = new ArrayList<>();
@@ -313,7 +305,7 @@ public class Sistema {
 		        totalRentabilidad = totalRentabilidad.subtract(sueldosFestival);
 		    }
 
-		    return totalRentabilidad;
+		    return totalRentabilidad.setScale(2, RoundingMode.HALF_UP);
 	}
 	
 	
@@ -322,7 +314,7 @@ public class Sistema {
 	 
 
 	public List<ReporteVenta> generarRankingUnidadesMayorRecaudacion(Festival festival)throws ExceptionSinRegistro, ExceptionMenorZero{
-		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		traerFestival(festival.getNombreFestival());
 		
 		List<ReporteVenta> lstRecaudacionUnidades = generarReporteRecaudacion(festival);
 		
@@ -348,9 +340,9 @@ public class Sistema {
 	
 	public Plato obtenerPlatoEstrella(UnidadVenta unidadVenta, Festival festival) throws ExceptionSinRegistro{
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		traerFestival(festival.getNombreFestival());
 		
-		if (traerUnidadVenta(unidadVenta.getCodigo()) == null) throw new ExceptionSinRegistro ("ERROR. La unidad " + unidadVenta.getCodigo() + " no existe.");	
+		traerUnidadVenta(unidadVenta.getCodigo());	
 		
 		Plato platoEstrella = null;
 	    int maxCantidadGlobal = -1; 
@@ -390,7 +382,7 @@ public class Sistema {
 	
 	public 	List<Personal> traerPersonalPorFestival(Festival festival) throws ExceptionSinRegistro{
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		traerFestival(festival.getNombreFestival());
 		
 		List<Personal> lstPersonalFestival = new ArrayList<Personal>();
 		
@@ -413,7 +405,7 @@ public class Sistema {
 	
 	public List<ReporteMayoresCanon> obtenerUnidadesConMayorCanon(Festival festival)throws ExceptionSinRegistro{
 		
-		if (traerFestival(festival.getNombreFestival()) == null) throw new ExceptionSinRegistro ("ERROR. El festival " + festival.getNombreFestival() + " no existe.");
+		traerFestival(festival.getNombreFestival());
 		
 		List<ReporteMayoresCanon> lstTodosLosCanones = new ArrayList<>();
 
@@ -447,7 +439,7 @@ public class Sistema {
 	    	
 
 	    	
-	        BigDecimal canonCalculado = unidad.calcularCanon(festival.getCostoFestival());
+	        BigDecimal canonCalculado = unidad.calcularCanon(festival.getCostoFestival()).setScale(2, RoundingMode.HALF_UP);
 	        
 	        
 	        // String tipoUnidad = "Puesto Desarmable";
@@ -492,7 +484,7 @@ public class Sistema {
 
 			BigDecimal total = pedido.calcularTotalPedido().subtract(pedido.calcularTotalCosteProduccion());
 
-			return total;
+			return total.setScale(2, RoundingMode.HALF_UP);
 		}
 	
 }

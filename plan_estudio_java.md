@@ -2,6 +2,7 @@
 
 Armado el 12/11/2026 a partir de la revisión de tus 20 proyectos de
 Orientación a Objetos 1 (unas 7.700 líneas de código).
+Última actualización: 21/11/2026 (Fase 1 CERRADA; sigue la Fase 2).
 
 Este archivo es texto plano (Markdown). Lo podés abrir con cualquier editor,
 leer en la terminal con `less plan_estudio_java.md`, o abrirlo en VS Code y
@@ -297,6 +298,9 @@ aplica todo en EpicentroGourmet en una carpeta propia: epicentro-original
 (intacta), epicentro-fase1 (original + 1.1 a 1.6), epicentro-fase2 (copia de
 fase1 + lo nuevo de la Fase 2), y así. Nunca se edita una carpeta ya
 cerrada. Detalle y lista acumulada en estado_estudio.md.
+ESTADO: FASE 1 CERRADA el 21/11/2026 (epicentro-fase1 terminado, con
+CAMBIOS.MD final). Quedó sin aplicar, por decisión del alumno, el bug de
+Vector.traerElMenor (punto 7).
 
 ### FASE 2: Conceptos nuevos, en este orden (6 a 10 semanas)
 Cada paso usa el anterior, no los saltees. Para cada uno: ver / leer la
@@ -312,6 +316,11 @@ explicación, hacer ejercicios chicos, aplicarlo a un proyecto tuyo.
 8. Java moderno, Strings/memoria                           (Bloques 9, 10)
 9. Archivos                                                (Bloque 11)
 10. Concurrencia y anotaciones (nociones)                  (Bloques 12, 13)
+
+Arrastrado de la Fase 1 (opcional, al armar epicentro-fase2): método
+abstracto en UnidadVenta que devuelva TipoUnidad en lugar del instanceof
+(paso 1), orden definido en los reportes con Comparator / LinkedHashMap /
+TreeMap (paso 2) y decidir si especialidadCulinaria pasa a enum.
 
 Ejercicios sugeridos por paso:
 - (1) Convertí la jerarquía Repartidor en una interfaz `Repartidor` con dos
@@ -559,18 +568,24 @@ FASE 1
 - [x] Map en lugar de búsquedas con while (1.6 cerrado 17/11/2026; retoques cerrados 18/11/2026)
 - [x] BigDecimal para dinero (1.5 cerrado 16/11/2026)
 - [ ] bug de Vector corregido (el alumno decidió el 20/11/2026 no hacerlo; queda NO APLICADO)
-- [ ] FASE 1 FINAL: EpicentroGourmet refactorizado en epicentro-fase1 (1.1 a 1.6)
-      EN CURSO (19 y 20/11/2026): aplicado 1.1, 1.2 (enums Turno, Temporada,
-      TipoUnidad), 1.6 en Sistema y gran parte de 1.3 y 1.4. Falta (mañana):
-        - requireNonNull de primitivos y antes de super(); criterio del cero
-          y mensajes; validaciones en Plato, PuestoDesarmable y setters.
-        - validarX a private static; atributos protected -> private;
-          setters de los reportes.
-        - BigDecimal.valueOf en vez de new BigDecimal(double) y setScale al
-          final de sueldos, canon y recaudación.
-        - Borrar los if (traerX(...) == null) de Sistema y unificar los
-          traerX internos (excepción en lugar de null).
-        - Re-correr test1 y cerrar CAMBIOS.MD.
+- [x] FASE 1 FINAL: EpicentroGourmet refactorizado en epicentro-fase1
+      (1.1 a 1.6). CERRADA el 21/11/2026 (trabajo del 19 al 21/11).
+      Aplicado: 1.1 equals/hashCode; 1.2 enums Turno, Temporada,
+      TipoUnidad; 1.3 excepciones propias, requireNonNull solo en
+      referencias y después de super(...), validaciones de valor con el
+      criterio del cero por campo; 1.4 List.copyOf y atributos private
+      (Personal y UnidadVenta); 1.5 BigDecimal.valueOf y setScale(2,
+      HALF_UP) una vez al final de sueldos, canon, rentabilidad y
+      recaudación; 1.6 cinco Map en Sistema y traerX con excepción.
+      Verificado con test1 (CU5 a CU13, 2 decimales, valores de referencia
+      en CAMBIOS.MD).
+      Decisiones: costoProduccion sin validar (el 0 es válido); solo
+      requireNonNull en responsable y especialidadCulinaria; traerX
+      internos devuelven null a propósito (se usan para detectar
+      duplicados); atributos private en las clases padre.
+      Quedó como opcional: método abstracto con TipoUnidad (Fase 2),
+      especialidadCulinaria enum, etiquetas viejas del test, orden de los
+      reportes.
 
 FASE 2
 - [ ] 1. Interfaces
@@ -652,11 +667,13 @@ Desde el 18/11/2026 se aplica al cierre de cada FASE, en carpetas separadas
   el resultado, compareTo (nunca equals), divide con escala y
   RoundingMode, redondear una vez al final, sin BigDecimal como clave,
   constantes con nombre.
-- [en curso] epicentro-fase1 (20/11/2026): 1.1, 1.2 y 1.6 aplicados; 1.3, 1.4
-  y 1.5 aplicados en parte (falta lo listado en la sección 9, FASE 1 FINAL).
-  Lecciones nuevas: requireNonNull no valida primitivos (boxing), validar
-  con la instancia del Sistema, lastIdX++ después del put, validarX
-  private static, criterio del cero por campo.
+- [cerrado 21/11/2026] epicentro-fase1: 1.1 a 1.6 aplicados (detalle en
+  CAMBIOS.MD y en estado_estudio.md). Lecciones nuevas: requireNonNull no
+  valida primitivos (boxing), validar con la instancia del Sistema,
+  lastIdX++ después del put, criterio del cero por campo, el if
+  (traerX == null) es código muerto pero la llamada a traerX se conserva,
+  BigDecimal.valueOf, setScale devuelve un objeto nuevo, !isBefore para
+  festivales de un día.
 - [aprendido] 1.6: Map en vez de listas con while (clave natural,
   traerX con excepción propia, duplicados con containsKey, ids con
   contador, Map.copyOf en getters, reportes sobre values()).
@@ -712,7 +729,7 @@ ESTADO: retoques de 1.3 a 1.6 CERRADOS en practicaFinalV2.
 - Proxima sesion: FASE 1 FINAL, epicentro-fase1 (aplicar 1.1 a 1.6).
 
 ### Sesion del 19 y 20/11/2026: Fase 1 final (epicentro-fase1)
-ESTADO: FASE 1 FINAL EN CURSO (aplicado casi todo; quedan correcciones).
+ESTADO: FASE 1 FINAL EN CURSO al cierre del 20/11 (se cerró el 21/11, ver abajo).
 - Se aplico 1.1 a 1.6 en EpicentroGourmet (carpeta epicentro-fase1) y se
   revisó el zip versión por versión.
 - Bugs encontrados y corregidos: CU8 restaba la ganancia en vez del coste;
@@ -733,6 +750,35 @@ ESTADO: FASE 1 FINAL EN CURSO (aplicado casi todo; quedan correcciones).
 - Pendientes: ver la sección 9 (FASE 1 FINAL). Se corre test1 antes y después.
 - Proxima sesion: correcciones de epicentro-fase1 en el orden a) a f) de
   estado_estudio.md, cierre con CAMBIOS.MD; después Fase 2 (Interfaces).
+
+### Sesion del 21/11/2026: cierre de la Fase 1 (epicentro-fase1)
+ESTADO: FASE 1 CERRADA.
+- Se revisaron los zips contra el anterior (diff). Confirmado en código:
+  requireNonNull después de super() en Cajero y Cocinero, sin
+  requireNonNull de primitivos en PuestoDesarmable, BigDecimal.valueOf en
+  FoodTruck, PuestoDesarmable y Cajero, Festival.validarFechaFin con
+  isBefore, atributos de Personal y UnidadVenta en private.
+- Lo posterior al último zip (FoodTruck, borrado de los if (traerX == null),
+  validarX, setScale) se dio por bueno por palabra del alumno y por la
+  salida de test1.
+- Salida de test1: CU13 mostraba el tipo de dos formas (el test usaba
+  getTipoUnidad() en una línea y getDescripcion() en la otra); después los
+  montos salían sin setScale ("$570000.0", "$0", 3 decimales en canon y
+  rentabilidad); en la última corrida todo sale con 2 decimales.
+- Decisiones: costoProduccion sin validar (0 válido); solo requireNonNull
+  en responsable y especialidadCulinaria; traerX internos con null a
+  propósito; atributos private en las clases padre.
+- Aprendido: la llamada a traerX valida aunque se borre el if; valueOf vs
+  new BigDecimal(double); setScale devuelve un objeto nuevo y el
+  BigDecimal.ZERO sin setScale delata el formato; !isBefore permite
+  festivales de un día; enum con toString propio.
+- Entregado: CAMBIOS.MD final (con valores de referencia para comparar en
+  la Fase 2), estado_estudio.md y este plan actualizados.
+- Pendiente (opcional): método abstracto con TipoUnidad, especialidadCulinaria
+  enum, etiquetas del test, orden de reportes. Git: commit de la fase y,
+  opcional, git tag fase1-cerrada.
+- Proxima sesion: FASE 2 / Bloque 2 (Interfaces), empezando por una
+  interfaz tipo CalculadorCosto en practicaFinalV2.
 
 ### Sesiones anteriores (resumen)
 - 13/11/2026: plan armado; 1.1 (equals/hashCode) y 1.2 (enums) completos.

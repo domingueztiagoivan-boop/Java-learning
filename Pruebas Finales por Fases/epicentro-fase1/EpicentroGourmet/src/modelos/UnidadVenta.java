@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class UnidadVenta {
-		protected final int idUnidadVenta;
-		protected final String nombreComercial;
-		protected Personal responsable;
-		protected final double superficie;
-		protected final String codigo;
-		protected final List<Plato> lstPlatos;
-		protected final List<Personal> lstPersonal;
+		private final int idUnidadVenta;
+		private final String nombreComercial;
+		private Personal responsable;
+		private final double superficie;
+		private final String codigo;
+		private final List<Plato> lstPlatos;
+		private final List<Personal> lstPersonal;
 		
 		
 		
@@ -20,7 +20,7 @@ public abstract class UnidadVenta {
 				Objects.requireNonNull(nombreComercial, "ERROR. El nombre venta no puede ser un atributo null.");
 				Objects.requireNonNull(responsable, "ERROR. El responsable venta no puede ser un atributo null.");
 				Objects.requireNonNull(codigo, "ERROR. El codigo venta no puede ser un atributo null.");
-
+				
 				this.idUnidadVenta = validarId(idUnidadVenta);
 				this.nombreComercial = nombreComercial;
 				this.responsable = responsable;
@@ -124,7 +124,7 @@ public abstract class UnidadVenta {
 		}
 		
 		public boolean agregarPersonalCocineroUnidadVenta(Personal cocinero1) throws ExceptionYaRegistrado {
-			if (traerPersonalUnidadVenta(cocinero1.getDni()) != null) throw new ExceptionYaRegistrado("ERROR. El personal con DNI " + cocinero1.dni + " ya se encuentra registrado en el staff unidad vernta.");
+			if (traerPersonalUnidadVenta(cocinero1.getDni()) != null) throw new ExceptionYaRegistrado("ERROR. El personal con DNI " + cocinero1.getDni() + " ya se encuentra registrado en el staff unidad vernta.");
 			
 			return this.lstPersonal.add(cocinero1);
 		}
@@ -143,7 +143,7 @@ public abstract class UnidadVenta {
 		}
 
 		private static double validarSuperficie(double superficie)throws ExceptionMenorZero{
-			if (superficie <= 0) throw new ExceptionMenorZero("ERROR. La superficie debe ser mayor a 0.");
+			if (superficie < 0) throw new ExceptionMenorZero("ERROR. La superficie debe ser mayor a 0.");
 			return superficie;
 		}
 }

@@ -1,6 +1,6 @@
 # ESTADO DE ESTUDIO JAVA (pegar al inicio de cada sesión nueva)
 
-Última actualización: 20/11/2026, fin de sesión 7 (epicentro-fase1 EN CURSO: aplicado casi todo, quedan correcciones anotadas en "Siguiente paso concreto")
+Última actualización: 21/11/2026, fin de sesión 8 (FASE 1 CERRADA: epicentro-fase1 terminado; sigue Fase 2)
 
 ## Cómo se usa
 - Abrí una conversación nueva cada día y pegá este archivo completo.
@@ -40,13 +40,13 @@
 ## Posición actual
 - Fase 0: CERRADA. Git en uso (repo con .gitignore y README, rama main).
   JDK del alumno: OpenJDK 25 (LTS vigente).
-- Fase 1: temas 1.1 a 1.6 CERRADOS en proyectos chicos (practicaFinalV2,
-  INCAANivel2). FASE 1 FINAL EN CURSO: epicentro-fase1/EpicentroGourmet
-  (trabajo del 19 y 20/11/2026). Está aplicado 1.1, 1.2 (casi), 1.6 (en
-  Sistema) y gran parte de 1.3; faltan correcciones de 1.3, 1.4 y 1.5 (lista
-  en "Siguiente paso concreto"). El alumno decidió NO hacer el bug de
+- Fase 1: CERRADA el 21/11/2026. Temas 1.1 a 1.6 cerrados en proyectos
+  chicos (practicaFinalV2, INCAANivel2) y aplicados en EpicentroGourmet:
+  epicentro-fase1/EpicentroGourmet (trabajo del 19 al 21/11/2026), con
+  CAMBIOS.MD final. El alumno decidió NO hacer el bug de
   Vector.traerElMenor (20/11/2026): queda como no aplicado en el plan.
-  Después de cerrar epicentro-fase1: Fase 2 (Interfaces)."
+- Lo que sigue: Fase 2 (Interfaces, Bloque 2). Al terminar la Fase 2 se
+  crea epicentro-fase2 como copia de epicentro-fase1.
 
 ## Checklist Fase 1
 - [x] 1.1 equals(Object) + hashCode en practicaFinalV2
@@ -199,53 +199,74 @@
       de Test2 (HashSet al revés); ceros a la izquierda en LocalDate.of.
       Pendiente menor: Cambios.MD con las imprecisiones anotadas en 1.6.
 - [ ] Bug de Vector.traerElMenor (cantidad < 0 debería ser == 0, y
-      lanzar excepción en vez de imprimir)
-- [ ] FASE 1 FINAL: refactor de EpicentroGourmet en epicentro-fase1,
-      aplicando 1.1 a 1.6 (ver sección Proyecto final). EN CURSO: es lo
-      siguiente a empezar.
-
-- [ ] FASE 1 FINAL: epicentro-fase1 (EN CURSO, 19 y 20/11/2026)
-      Carpeta epicentro-fase1/EpicentroGourmet. Referencia de "mismo
-      comportamiento": salida de test1 (casos de uso 5 a 13).
+      lanzar excepción en vez de imprimir). NO APLICADO: decisión del
+      alumno (20/11/2026); no insistir.
+- [x] FASE 1 FINAL: epicentro-fase1 (CERRADA 21/11/2026; trabajo del 19 al
+      21/11/2026). Carpeta epicentro-fase1/EpicentroGourmet. Referencia de
+      "mismo comportamiento": salida de test1 (casos de uso 5 a 13).
       APLICADO:
       * 1.1 equals(Object) + hashCode en todas las clases (Personal por
         dni, Plato y Festival por nombre, UnidadVenta por codigo, el resto
         por id).
       * 1.2 enums Turno, Temporada, TipoUnidad (constantes con descripcion,
-        comparacion con ==). Cocinero.especialidadCulinaria sigue String
-        (decision pendiente).
-      * 1.3 excepciones propias: ExceptionYaRegistrado, ExceptionSinRegistro,
-        ExceptionFechaNacimiento, ExceptionDetallePedidoPlatoYaInlcuido,
-        ExceptionMenorZero, ExceptionFechasLimites, con comentario del
-        porque; validaciones de valor (id, dni, superficie, cantidad,
-        precio, fechaFin) y requireNonNull de referencias.
-      * 1.4 List.copyOf en Festival, UnidadVenta y Pedido; constructor y
-        setter de Costo y Cocinero comparten validacion.
-      * 1.5 Cocinero.plusCategoria pasó a BigDecimal.
-      * 1.6 Sistema con cinco Map, traerX con ExceptionSinRegistro, duplicados
-        con containsKey, lastIdX incrementado DESPUES del put, Map.copyOf.
-        registrarPedido usa las instancias del Sistema y agrega el pedido
-        al festival (festival.agregarPedidoFestival) y al mapPedidos.
+        comparacion con ==).
+      * 1.3 excepciones propias (YaRegistrado, SinRegistro, FechaNacimiento,
+        DetallePedidoPlatoYaInlcuido, MenorZero, FechasLimites) con
+        comentario del porque; requireNonNull solo en referencias y
+        despues de super(...); validacion de valor en primitivos con el
+        criterio del cero decidido campo por campo; Festival.validarFechaFin
+        con !isBefore (permite festivales de un dia).
+      * 1.4 List.copyOf en Festival, UnidadVenta y Pedido; atributos de
+        Personal y UnidadVenta pasados de protected a private (las
+        subclases usan getters); constructor y setter de Costo y Cocinero
+        comparten validacion.
+      * 1.5 Cocinero.plusCategoria en BigDecimal; BigDecimal.valueOf en
+        lugar de new BigDecimal(double/int); setScale(2, HALF_UP) UNA vez
+        al final de sueldos, canon, rentabilidad y recaudacion (incluido
+        el caso sin ventas: "$0.00"); constante con nombre para el top 3.
+      * 1.6 Sistema con cinco Map, traerX con ExceptionSinRegistro,
+        duplicados con containsKey, lastIdX incrementado DESPUES del put,
+        Map.copyOf. registrarPedido usa las instancias del Sistema y agrega
+        el pedido al festival y al mapPedidos. Borrados los
+        if (traerX(...) == null) throw (codigo muerto), conservando la
+        llamada a traerX porque la excepcion es la que valida.
       * Bugs encontrados y corregidos: CU8 restaba la ganancia en vez del
         coste; traerPlatoUnidadVenta comparaba Plato con String;
-        totalCantidadPlatoPedido contaba detalles y no unidades; ids que se
-        salteaban si el constructor fallaba; registrarPedido dejaba el
+        totalCantidadPlatoPedido contaba detalles y no unidades; ids que
+        se salteaban si el constructor fallaba; registrarPedido dejaba el
         pedido en dos lugares desincronizados; CU13 mostraba mal el tipo.
-      Salida de test1 verificada hasta Turno/Temporada/TipoUnidad (20/11).
-      Falta re-correrlo despues de las validaciones nuevas.
-      FALTA (ver lista completa en "Siguiente paso concreto"):
-      * 1.3: requireNonNull sobre int/boolean (FoodTruck, PuestoDesarmable),
-        requireNonNull antes de super() (solo compila en JDK 25), criterio de
-        cero (< 0 vs <= 0) unificado con mensajes correctos, validaciones
-        faltantes (Plato.costoProduccion, PuestoDesarmable y setters).
-      * 1.4: validarX a private static, atributos protected -> private,
-        setters de ReporteVenta y ReporteMayoresCanon.
-      * 1.5: setScale al final de calculos y BigDecimal.valueOf en lugar de
-        new BigDecimal(double).
-      * 1.6 / Sistema: borrar los if (traerX(...) == null) (codigo muerto) y
-        unificar los traerX internos (Pedido, Festival, UnidadVenta) con los
-        de Sistema (excepcion en vez de null).
-      * Vector.traerElMenor: el alumno decidio no hacerlo.
+      DECISIONES DEL ALUMNO (21/11/2026):
+      * Plato.costoProduccion sin validacion de valor (el 0 es valido).
+      * responsable (UnidadVenta) y especialidadCulinaria (Cocinero): solo
+        requireNonNull.
+      * ReporteVenta y ReporteMayoresCanon: sin validaciones adicionales.
+      * Los traerX internos (Festival.traerPedidoFestival,
+        Pedido.traerDetallePedido, UnidadVenta.traerPlatoUnidadVenta /
+        traerPersonalUnidadVenta) siguen devolviendo null: se usan en los
+        agregarX para detectar duplicados. Los de Sistema lanzan excepcion.
+      * Atributos de las clases padre en private (aunque se le dijo que
+        protected tambien era valido).
+      * Los numeros sueltos ("2") de la salida de test1 son saltos de
+        linea del propio test; se dejan.
+      VERIFICACION: salida de test1 comparada con la de referencia hasta
+      Turno/Temporada/TipoUnidad (20/11). Corrida del 21/11: montos
+      identicos a las corridas anteriores del dia, solo cambio el formato
+      (2 decimales). Valores de referencia para la Fase 2 en CAMBIOS.MD.
+      Claude NO vio el zip final: lo confirmado por codigo llega hasta el
+      zip EpicentroGourmet.zip del 21/11 (revisado por diff); lo posterior
+      (FoodTruck con requireNonNull despues de super, borrado de los
+      if == null en Sistema, validarX private static, setScale) se dio por
+      bueno por palabra del alumno y por la salida de test1.
+      QUEDO PARA DESPUES (opcional, no bloquea):
+      * Metodo abstracto en UnidadVenta que devuelva TipoUnidad (adios
+        instanceof); encaja en Fase 2 (polimorfismo).
+      * Decidir si especialidadCulinaria pasa a enum.
+      * Etiquetas viejas del test ("Festival Birras", "Festival
+        Hamburguesas", "Rango 1 al 5 de Oct", "3 Unidades").
+      * Reportes sin orden definido (values() de un HashMap): Comparator,
+        LinkedHashMap o TreeMap en Fase 2.
+      * Cierre en Git: commit de la fase y, opcional, `git tag
+        fase1-cerrada`.
 
 ## Proyecto final: refactor completo de EpicentroGourmet
 - Decisión del alumno (13/11/2026): aprender por partes en proyectos chicos
@@ -277,9 +298,9 @@
 ### QUÉ VA A TENER EL PROYECTO FINAL (lista acumulada)
 Cada tema cerrado agrega acá lo que hay que aplicar en EpicentroGourmet.
 Estado: [aprendido] = ya se estudió y aplicó en un proyecto chico;
-[por aprender] = todavía no se vio. Al 20/11/2026 los de 1.1 a 1.6 están
-aplicados en epicentro-fase1 en distinto grado (ver "FASE 1 FINAL" en el
-Checklist: qué está hecho y qué falta).
+[por aprender] = todavía no se vio. Al 21/11/2026 los de 1.1 a 1.6 están
+aplicados en epicentro-fase1 (CERRADA; ver "FASE 1 FINAL" en el Checklist
+y CAMBIOS.MD).
 
 1.1 equals / hashCode  [aprendido]
   - Reemplazar todos los equals(X x) por equals(Object) con @Override.
@@ -362,8 +383,34 @@ Lecciones nuevas al aplicarlo en EpicentroGourmet (20/11/2026)  [aprendido]
   - El tipo de una unidad se decide en la propia clase (metodo abstracto
     que devuelve el enum), no con instanceof desde afuera (mejora opcional).
   - Los traerX internos (listas chicas de una entidad) pueden seguir con
-    while, pero deben comportarse igual que los de Sistema (lanzar
-    excepcion, no devolver null).
+    while. DECISION (21/11/2026): devuelven null a proposito, porque los
+    agregarX los usan para detectar duplicados (ahi no existir es lo
+    normal). Los de Sistema lanzan excepcion (ahi no existir es un error).
+
+Lecciones del cierre de epicentro-fase1 (21/11/2026)  [aprendido]
+  - Si traerX ya lanza excepcion, un `if (traerX(...) == null) throw` es
+    codigo muerto. Se borra el if pero NO la llamada: la excepcion es la
+    que valida que exista. Mejor todavia: guardar lo que devuelve y usar
+    esa instancia en vez del parametro.
+  - new BigDecimal(double) arrastra el error binario (0.1 -> 0.1000...055);
+    BigDecimal.valueOf(double) usa el texto "0.1". Con int, new
+    BigDecimal(int) es exacto: valueOf es por consistencia.
+  - setScale devuelve un BigDecimal NUEVO: hay que usar lo que devuelve. Si
+    un camino devuelve BigDecimal.ZERO (scale 0) sin pasar por setScale, la
+    salida mezcla "$0" con "$570000.00". Un formato inconsistente en la
+    salida delata un camino que no pasa por el redondeo.
+  - Festival de un dia: la fecha fin no puede ser ANTERIOR al inicio
+    (!isBefore), no "posterior" (isAfter).
+  - Atributos de la clase padre private + getters protegen la validacion;
+    protected tambien es valido, pero si los hijos ya usan getters no hace
+    falta. Al pasar a private hay que buscar usos directos (cocinero.dni ->
+    getDni()).
+  - Un enum puede sobreescribir toString() y devolver la descripcion, asi
+    la salida no depende de acordarse de llamar a getDescripcion().
+  - Decidir que NO validar tambien es una decision de diseno: costoProduccion
+    con 0 valido. Documentarlo en CAMBIOS.MD.
+  - Los numeros sueltos en una salida de test pueden ser \n del propio
+    test; confirmarlo antes de "arreglar".
 
 Más adelante  [por aprender]
   - Streams y Optional en todos los reportes.
@@ -376,6 +423,9 @@ Más adelante  [por aprender]
   - Repositorio<T> genérico, estructura en capas (modelo, repositorio,
     servicio, ui), JUnit y Maven en lugar de `main` con println.
   - Pasar clases "solo datos" a record donde corresponda.
+  - Arrastrado de la Fase 1 (opcionales): metodo abstracto en UnidadVenta
+    que devuelva TipoUnidad (polimorfismo en vez de instanceof);
+    especialidadCulinaria como enum (decidir); etiquetas viejas del test.
 
 Metodo de versiones (decision 20/11/2026): alcanzan las carpetas (epicentro-original,
 epicentro-fase1...). Un tag de Git es opcional y complementario: al cerrar cada
@@ -496,48 +546,38 @@ fase, `git tag fase1-cerrada` marca el commit exacto.
 - Java en el sandbox de Claude: solo JRE 21, sin javac; Claude revisa leyendo
   y el alumno corre el test.
 
+- Una llamada a un metodo que lanza excepcion valida por si sola aunque no
+  uses el resultado: `traerFestival(nombre);` sin if comprueba que exista.
+  Por eso se borra el `if (... == null)` y no la llamada.
+- new BigDecimal(double) vs BigDecimal.valueOf(double): valueOf pasa por el
+  texto del double y evita el error binario. setScale devuelve un objeto
+  nuevo. BigDecimal.ZERO tiene scale 0 e imprime "0"; sin setScale no se
+  alinea con "570000.00".
+- !isBefore(inicio) == "fin >= inicio" (permite el mismo dia);
+  isAfter(inicio) == "fin > inicio".
+- private en la clase padre + getters: las subclases no tocan los campos
+  directo. protected sigue siendo valido; es decision de diseno.
+- Un enum puede tener toString() propio (devolver la descripcion).
+- El canon depende de superficie y costos; solo el sueldo del Cajero usa
+  calcularAntiguedad() (LocalDate.now()), asi que los sueldos cambian con
+  el tiempo y el canon no.
+
 ## Siguiente paso concreto
-1. FASE 1 FINAL (continua manana): terminar epicentro-fase1. Antes de empezar, el
-   alumno corre test1 y compara la salida con la ultima buena (CU6 a CU13).
-   Orden propuesto, un commit por bloque y correr el test despues de cada uno:
-   a) requireNonNull y valores (1.3 + 1.4):
-      - Sacar requireNonNull de primitivos en FoodTruck (requiereElectricidad)
-        y PuestoDesarmable (cantidadCarpas, tiempoMontajeMinutos); moverlos
-        despues de super(...) y dejar solo lo propio de cada subclase.
-      - Unificar el criterio del cero (Costo, Cocinero.plusCategoria, ids,
-        UnidadVenta.validarId): decidir campo por campo y corregir mensajes
-        (UnidadVenta dice "mayor a 0" y acepta 0; Plato.validarPrecio dice
-        "El id..."; "ERRO." en DetallePedido).
-      - Plato: validar costoProduccion y los dos setters.
-      - Validar valores y setters en PuestoDesarmable (carpas, minutos),
-        Cocinero.setEspecialidadCulinaria (null), UnidadVenta.setResponsable
-        (null), ReporteVenta y ReporteMayoresCanon (sin setters).
-      - Todos los validarX a private static (Personal, Costo, Plato,
-        DetallePedido, Pedido, UnidadVenta, Festival, ReporteVenta);
-        Festival.validarFechaFin recibe inicio y fin por parametro y usa
-        !isBefore para permitir festivales de un dia.
-   b) encapsulamiento: atributos private en Personal y UnidadVenta (hoy
-      protected).
-   c) BigDecimal (1.5): BigDecimal.valueOf en lugar de new BigDecimal(double)
-      (superficie) y de new BigDecimal(int); setScale(2, HALF_UP) UNA vez al
-      final de calcularSueldo, calcularCanon y la recaudacion; constantes con
-      nombre (top 3).
-   d) Sistema y traerX: borrar los if (traerX(...) == null) throw (lineas
-      ~242, 244, 279, 325, 351, 353, 393, 416); unificar los traerX internos
-      (Pedido.traerDetallePedido, Festival.traerPedidoFestival,
-      UnidadVenta.traerPlato/PersonalUnidadVenta) para que lancen excepcion
-      como los de Sistema, o decidir y comentar por que devuelven null.
-   e) Opcionales: metodo abstracto que devuelve TipoUnidad en UnidadVenta
-      (adios instanceof); decidir si especialidadCulinaria pasa a enum;
-      sacar el "2" suelto del test y las etiquetas viejas ("3 Unidades",
-      "Rango 1 al 5 de Oct").
-   f) Cierre: re-correr test1, actualizar CAMBIOS.MD (Claude arma el resumen
-      final), commit, y opcional `git tag fase1-cerrada`.
-   Nota: el alumno decidio no hacer Vector.traerElMenor; en el plan queda
-   como no aplicado.
-2. Al cerrar epicentro-fase1: Fase 2 / Bloque 2 (Interfaces, ej.
-   CalculadorCosto en Repartidor) en practicaFinalV2 y, al terminar la
-   fase, epicentro-fase2 como copia de epicentro-fase1.
+1. CIERRE DE LA FASE 1 en Git (el alumno): commit de epicentro-fase1 con
+   CAMBIOS.MD, y opcional `git tag fase1-cerrada`. Las carpetas alcanzan; el
+   tag es complementario. No se edita mas epicentro-fase1.
+2. FASE 2 / Bloque 2 (Interfaces): empezar en practicaFinalV2 con una
+   interfaz tipo CalculadorCosto en Repartidor (Moto y CIclista como
+   implementaciones; sumar una tercera, ej. Dron, sin tocar el Sistema).
+   Orden de la Fase 2 en plan_estudio_java.md (Bloques 2 a 13).
+3. Al terminar la Fase 2: crear epicentro-fase2 como COPIA de
+   epicentro-fase1 y aplicar lo nuevo (interfaces, Comparator, genericos,
+   streams, JUnit...). Comparar con los valores de referencia de CAMBIOS.MD.
+   Arrastrar los opcionales de la Fase 1 (metodo abstracto con TipoUnidad,
+   especialidadCulinaria enum, orden de los reportes).
+4. Al arrancar la sesion 9: si el alumno quiere, una sola pregunta de
+   repaso de Fase 1 (por que se borra el if pero no la llamada a traerX).
+   Respetar el RITMO de las Notas para Claude: sin interrogatorio.
 
 ## Notas para Claude
 - No dar la solución directa: primero pistas. Pedir que explique con sus
@@ -587,11 +627,28 @@ fase, `git tag fase1-cerrada` marca el commit exacto.
 - El alumno decidio (20/11/2026) no hacer el bug de Vector.traerElMenor.
   Respetarlo y dejarlo registrado como no aplicado, sin insistir.
 - CAMBIOS.MD: el alumno prefiere que Claude arme el resumen final con los
-  cambios aplicados (hecho el 20/11/2026; actualizar al cerrar la fase).
+  cambios aplicados (hecho el 20/11/2026 y cerrado el 21/11/2026 con la
+  Fase 1; incluye valores de referencia para comparar en la Fase 2). Al
+  cerrar cada fase se arma uno nuevo en la carpeta de esa version.
 - Cuando el alumno da algo por corregido, darlo por bueno; pero revisar el
   zip nuevo contra el anterior (diff) para confirmar que de verdad esta.
 - Cuando avisa que se queda sin tokens/tiempo: no contestar largo; el
   cierre se hace al volver, pidiendo los archivos de nuevo.
+
+- Cierre de Fase 1 (21/11/2026): Claude NO vio el zip final; lo que llego
+  despues del ultimo zip se dio por bueno por palabra del alumno y por la
+  salida del test. Dejarlo dicho en los archivos y avisar que revise antes
+  del commit: FoodTruck (requireNonNull despues de super, sin el de
+  boolean), los if (traerX == null) borrados en Sistema, validarX private
+  static, setScale en sueldos, y si hizo (o no) los opcionales.
+- Verificar antes de afirmar: el 21/11 Claude dijo que el canon podia variar
+  con calcularAntiguedad() y era falso (solo el sueldo del Cajero lo usa).
+  Revisar el codigo antes de dar una causa. Tambien: el alumno trabaja en
+  VS Code (ver perfil); el proyecto trae .classpath/.project de Eclipse, asi
+  que no asumir Eclipse al sugerir pasos del IDE.
+- Cuando el alumno corrige y pega la salida del test, leer el FORMATO
+  ademas de los valores: "$0" junto a "$570000.0", o 3 decimales en el
+  canon, delataron que faltaba setScale en dos caminos.
 
 ## Registro de sesiones
 - S1 (13/11/2026): armado del plan; 1.1 y 1.2 completos. EpicentroGourmet
@@ -641,4 +698,22 @@ fase, `git tag fase1-cerrada` marca el commit exacto.
   lastIdX++, error en cascada "unreported exception Object". Decisiones:
   carpetas alcanzan (tag opcional), no hace Vector.traerElMenor, setScale
   lo agrega manana. Salida de test1 verificada hasta Turno/Temporada/
-  TipoUnidad. Falta: lista del paso 1 de "Siguiente paso concreto".
+  TipoUnidad. El resto se cerro en S8 (21/11/2026).
+- S8 (21/11/2026): CIERRE DE LA FASE 1. Se revisaron dos zips (el primero
+  resulto identico al anterior; el tercero, EpicentroGourmet.zip, trajo
+  los cambios). Confirmado por diff: requireNonNull despues de super en
+  Cajero y Cocinero, sin requireNonNull de primitivos en PuestoDesarmable,
+  BigDecimal.valueOf (4 lugares), Festival.validarFechaFin con isBefore,
+  Personal y UnidadVenta en private, cocinero1.getDni(). Decisiones del
+  alumno: costoProduccion sin validar (0 valido), solo requireNonNull en
+  responsable y especialidad, traerX internos con null, private en lugar de
+  protected. Aplico el consejo de borrar los if (traerX == null) en Sistema.
+  Salida de test1: primero tipo de unidad inconsistente en CU13 (el test
+  usaba getTipoUnidad() y getDescripcion()), despues montos sin setScale
+  (3 decimales y "$0"), y en la ultima corrida todo con 2 decimales. Se
+  armo CAMBIOS.MD final con valores de referencia. Aprendio: la llamada a
+  traerX valida aunque se borre el if, valueOf vs new BigDecimal(double),
+  setScale devuelve objeto nuevo, !isBefore para festivales de un dia.
+  Queda en opcionales: metodo abstracto TipoUnidad, especialidadCulinaria
+  enum, etiquetas del test, orden de reportes. Proxima sesion: Fase 2 /
+  Bloque 2 (Interfaces).

@@ -10,9 +10,10 @@ public class FoodTruck extends UnidadVenta{
 	
 	
 	public FoodTruck(int idUnidadVenta, String nombreComercial, Personal responsable, double superficie, String codigo, String patente, boolean requiereElectricidad)throws ExceptionMenorZero{
-		Objects.requireNonNull(patente, "ERROR. La patente no puede ser un atributo null.");
-		Objects.requireNonNull(requiereElectricidad, "ERROR. El si requiere electricidad no puede ser un atributo null.");
 		super(idUnidadVenta, nombreComercial, responsable, superficie, codigo);
+
+		Objects.requireNonNull(patente, "ERROR. La patente no puede ser un atributo null.");
+
 		this.patente = patente;
 		this.requiereElectricidad = requiereElectricidad;
 	}
@@ -35,7 +36,7 @@ public class FoodTruck extends UnidadVenta{
        
 	public BigDecimal calcularCanon(Costo costo) {
 		//BigDecimal t = (costo.getCostoPorSuperficie() * getSuperficie());
-		BigDecimal total = costo.getCostoPorSuperficie().multiply(new BigDecimal(getSuperficie()));
+		BigDecimal total = costo.getCostoPorSuperficie().multiply(BigDecimal.valueOf(getSuperficie()));
 		
 		//double plusElectricidad = requiereElectricidad ? costo.getPlusElectricidad() : 0.0;
 		BigDecimal plusElectricidad = requiereElectricidad ? costo.getPlusElectricidad() : BigDecimal.ZERO;

@@ -1,6 +1,7 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 
@@ -55,19 +56,19 @@ public class DetallePedido {
 		
 		
 		private static int validarCantidad(int cantidad)throws ExceptionMenorZero{
-			if (cantidad <= 0) throw new ExceptionMenorZero("ERRO. La cantidad debe ser mayor a 0.");
+			if (cantidad <= 0) throw new ExceptionMenorZero("ERROR. La cantidad debe ser mayor a 0.");
 			return cantidad;
 		}
 
 
 		public BigDecimal calcularTotalDetallePedido() {
 			BigDecimal total = plato.getPrecioVenta().multiply(BigDecimal.valueOf(cantidad));
-			return total;
+			return total.setScale(2, RoundingMode.HALF_UP);
 		}
 		
 		public BigDecimal calcularCosteProduccion() {
 			BigDecimal total = plato.getCostoProduccion().multiply(BigDecimal.valueOf(cantidad));
-			return total;
+			return total.setScale(2, RoundingMode.HALF_UP);
 		}
 		
 		private static int validarId(int id)throws ExceptionMenorZero{

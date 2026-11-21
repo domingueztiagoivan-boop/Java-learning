@@ -8,8 +8,10 @@ public class Cajero extends Personal{
 		private Turno turnoTrabajo;
 		
 		public Cajero(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, Turno turnoTrabajo) throws ExceptionFechaNacimiento, ExceptionMenorZero {
-			Objects.requireNonNull(turnoTrabajo, ("ERROR. El turno trabajo no puede ser parametro null."));
 			super(idPersonal, nombre, apellido, dni, fechaNacimiento, fechaIngreso);
+
+			Objects.requireNonNull(turnoTrabajo, ("ERROR. El turno trabajo no puede ser parametro null."));
+
 			this.turnoTrabajo = turnoTrabajo;
 		}
 
@@ -25,7 +27,7 @@ public class Cajero extends Personal{
 		
 		public BigDecimal calcularSueldo(Costo costo) {
 			
-			BigDecimal totalAntiguedad = costo.getPlusAnioAntiguedad().multiply(new BigDecimal(calcularAntiguedad()));
+			BigDecimal totalAntiguedad = costo.getPlusAnioAntiguedad().multiply(BigDecimal.valueOf((calcularAntiguedad())));
 			BigDecimal total = costo.getSueldoBase().add(totalAntiguedad);
 			return total;
 		}

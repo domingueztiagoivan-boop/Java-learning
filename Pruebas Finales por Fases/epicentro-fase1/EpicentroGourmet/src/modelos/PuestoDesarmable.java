@@ -1,7 +1,6 @@
 package modelos;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class PuestoDesarmable extends UnidadVenta{
 	private int cantidadCarpas;
@@ -9,9 +8,7 @@ public class PuestoDesarmable extends UnidadVenta{
 	
 	
 	public PuestoDesarmable(int idUnidadVenta, String nombreComercial, Personal responsable, double superficie, String codigo, int cantidadCarpas, int tiempoMontajeMinutos)throws ExceptionMenorZero {
-		Objects.requireNonNull(cantidadCarpas, "ERROR. La cantidad de carpas no puede ser un atributo null.");
-		Objects.requireNonNull(tiempoMontajeMinutos, "ERROR. El timepo de montaje no puede ser un atributo null.");
-		
+	
 		super(idUnidadVenta, nombreComercial, responsable, superficie, codigo);
 		this.cantidadCarpas = validarCantidadCarpas(cantidadCarpas);
 		this.tiempoMontajeMinutos = validarTiempoMontaje(tiempoMontajeMinutos);
@@ -50,8 +47,8 @@ public class PuestoDesarmable extends UnidadVenta{
 	
 	public BigDecimal calcularCanon(Costo costo) {
 
-		BigDecimal totalCostoSuperficie = costo.getCostoPorSuperficie().multiply(new BigDecimal(getSuperficie()));
-		BigDecimal totalCostoMontaje = costo.getDescuentoPorMontaje().multiply(new BigDecimal(getTiempoMontajeMinutos()));
+		BigDecimal totalCostoSuperficie = costo.getCostoPorSuperficie().multiply(BigDecimal.valueOf((getSuperficie())));
+		BigDecimal totalCostoMontaje = costo.getDescuentoPorMontaje().multiply(BigDecimal.valueOf((getTiempoMontajeMinutos())));
 
 		BigDecimal total = totalCostoSuperficie.subtract(totalCostoMontaje);
 		

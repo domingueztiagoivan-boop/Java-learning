@@ -70,7 +70,7 @@ public class Plato {
 
 
 	private static BigDecimal validarPrecio(BigDecimal precio)throws ExceptionMenorZero{
-			if (precio.compareTo(BigDecimal.ZERO) <= 0)throw new ExceptionMenorZero("ERROR. El id debe ser mayor o igual a 0.");
+			if (precio.compareTo(BigDecimal.ZERO) < 0)throw new ExceptionMenorZero("ERROR. El id debe ser mayor o igual a 0.");
 			return precio; 
 	}	
 }

@@ -1,6 +1,7 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class ReporteMayoresCanon {
@@ -35,7 +36,7 @@ public class ReporteMayoresCanon {
 	}
 	
 	public BigDecimal getCanon() {
-		return canon;
+		return canon.setScale(2, RoundingMode.HALF_UP);
 	}
 	public void setCanon(BigDecimal canon) {
 		this.canon = canon;

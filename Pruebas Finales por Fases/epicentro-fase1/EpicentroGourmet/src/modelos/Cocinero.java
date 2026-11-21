@@ -10,9 +10,11 @@ public class Cocinero extends Personal{
 	
 	
 	public Cocinero(int idPersonal, String nombre, String apellido, long dni, LocalDate fechaNacimiento, LocalDate fechaIngreso, String especialidadCulinaria, BigDecimal plusCategoria) throws ExceptionFechaNacimiento, ExceptionMenorZero {
-			Objects.requireNonNull(especialidadCulinaria, ("ERROR. La especialidad culinaria no puede ser parametro null."));
-			Objects.requireNonNull(plusCategoria, ("ERROR. El plus de categoria no puede ser parametro null."));
 		super(idPersonal, nombre, apellido, dni, fechaNacimiento, fechaIngreso);
+
+		Objects.requireNonNull(especialidadCulinaria, ("ERROR. La especialidad culinaria no puede ser parametro null."));
+		Objects.requireNonNull(plusCategoria, ("ERROR. El plus de categoria no puede ser parametro null."));
+		
 		this.especialidadCulinaria = especialidadCulinaria;
 		setPlusCategoria(plusCategoria);
 	}

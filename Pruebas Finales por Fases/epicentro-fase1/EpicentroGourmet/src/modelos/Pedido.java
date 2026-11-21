@@ -1,6 +1,7 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate; 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +112,7 @@ public class Pedido {
 				total = total.add(pedido.calcularTotalDetallePedido());
 			}
 
-			return total;
+			return total.setScale(2, RoundingMode.HALF_UP);
 		}
 		
 		public BigDecimal calcularTotalCosteProduccion() {
@@ -122,7 +123,7 @@ public class Pedido {
 				total = total.add(pedido.calcularCosteProduccion());
 			}
 
-			return total;
+			return total.setScale(2, RoundingMode.HALF_UP);
 		}
 		
 		

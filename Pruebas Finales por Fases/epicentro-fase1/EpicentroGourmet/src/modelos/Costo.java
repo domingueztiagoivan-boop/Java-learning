@@ -1,5 +1,6 @@
 package modelos;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class Costo {
@@ -36,7 +37,7 @@ public class Costo {
 	}
 
 	public BigDecimal getCostoPorSuperficie() {
-		return costoPorSuperficie;
+		return costoPorSuperficie.setScale(2, RoundingMode.HALF_UP);
 	}
 
 	public void setCostoPorSuperficie(BigDecimal costoPorSuperficie) throws ExceptionMenorZero{
@@ -45,7 +46,7 @@ public class Costo {
 	}
 
 	public BigDecimal getPlusAnioAntiguedad() {
-		return plusAnioAntiguedad;
+		return plusAnioAntiguedad.setScale(2, RoundingMode.HALF_UP);
 	}
 
 	public void setPlusAnioAntiguedad(BigDecimal plusAnioAntiguedad)throws ExceptionMenorZero {
@@ -54,7 +55,7 @@ public class Costo {
 	}
 
 	public BigDecimal getDescuentoPorMontaje() {
-		return descuentoPorMontaje;
+		return descuentoPorMontaje.setScale(2, RoundingMode.HALF_UP);
 	}
 
 	public void setDescuentoPorMontaje(BigDecimal descuentoPorMontaje)throws ExceptionMenorZero {
@@ -63,7 +64,7 @@ public class Costo {
 	}
 
 	public BigDecimal getPlusElectricidad() {
-		return plusElectricidad;
+		return plusElectricidad.setScale(2, RoundingMode.HALF_UP);
 	}
 
 	public void setPlusElectricidad(BigDecimal plusElectricidad) throws ExceptionMenorZero{

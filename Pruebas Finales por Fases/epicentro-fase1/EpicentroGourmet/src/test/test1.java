@@ -379,7 +379,7 @@ public class test1 {
 	            System.out.println("\n---------- Festival Birras ----------");
 	            List<ReporteMayoresCanon> topCanones = sistema.obtenerUnidadesConMayorCanon(sistema.traerFestival("Festival de la Cerveza"));
 	            for (ReporteMayoresCanon r : topCanones) {
-	                System.out.println("Podio Canon -> Unidad: " + r.getNombreComercial() + " [" + r.getTipoUnidad() + "] - Canon: $" + r.getCanon());
+	                System.out.println("Podio Canon -> Unidad: " + r.getNombreComercial() + " [" + r.getTipoUnidad().getDescripcion() + "] - Canon: $" + r.getCanon());
 	            }
             } catch (ExceptionSinRegistro e) {
                 System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
@@ -405,11 +405,6 @@ public class test1 {
         System.out.println("         FIN DEL TESTEO DE CASOS DE USO           ");
         System.out.println("==================================================");
         
-        try{
-        System.out.println(sistema.traerFestival("Festival de la Hamburguesa").getTemporadaFestival().getDescripcion());
-        } catch (ExceptionSinRegistro e) {
-                System.err.println("\n❌ ERROR DETECTADO DURANTE EL TEST: " + e.getMessage());
-            }
 	}
 
 }

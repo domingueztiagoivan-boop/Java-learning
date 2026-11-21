@@ -1,6 +1,7 @@
 package modelos;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class ReporteVenta {
@@ -27,7 +28,7 @@ public class ReporteVenta {
 	}
 	
 	public BigDecimal getRecaudacionTotal() {
-		return recaudacionTotal;
+		return recaudacionTotal.setScale(2, RoundingMode.HALF_UP);
 	}
 	public void setRecaudacionTotal(BigDecimal recaudacionTotal) {
 		this.recaudacionTotal = recaudacionTotal;
